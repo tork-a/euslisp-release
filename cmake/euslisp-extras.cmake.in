@@ -1,6 +1,0 @@
-# euslisp.cmake
-set(EUSDIR @CMAKE_INSTALL_PREFIX@/share/euslisp/)
-set(ARCHDIR @ARCHDIR@)
-message("-- set EUSDIR to ${EUSDIR}")
-message("-- set ARCHDIR to ${ARCHDIR}")
-
