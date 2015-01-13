@@ -39,10 +39,10 @@ add_custom_target(install_euslisp
 
 install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} --build . --target install_euslisp)")
 install(DIRECTORY contrib doc lib lisp models ${ARCHDIR}
-  DESTINATION share/euslisp/
+  DESTINATION share/euslisp/jskeus/eus/
   USE_SOURCE_PERMISSIONS)
 install(FILES package.xml DESTINATION share/euslisp/)
-install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink lisp/c include WORKING_DIRECTORY \$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/share/euslisp/)")
+install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink lisp/c include WORKING_DIRECTORY \$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/share/euslisp/jskeus/eus/)")
 
 catkin_package(CFG_EXTRAS euslisp-extras.cmake)
 catkin_add_env_hooks(99.euslisp SHELLS sh DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/env-hooks)
