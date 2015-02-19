@@ -46,3 +46,30 @@ install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink lisp/c 
 
 catkin_package(CFG_EXTRAS euslisp-extras.cmake)
 catkin_add_env_hooks(99.euslisp SHELLS sh DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/env-hooks)
+
+string(REGEX MATCH "catkin" need_catkin "$ENV{_}")
+if(need_catkin OR "${CATKIN_BUILD_BINARY_PACKAGE}")
+  install(CODE "
+## this is tricky force write catkin marker file
+set(_catkin_marker_file \"\${CMAKE_INSTALL_PREFIX}/.catkin\")
+# check if the develspace marker file exists yet
+if(EXISTS \${_catkin_marker_file})
+  file(READ \${_catkin_marker_file} _existing_sourcespaces)
+  if(_existing_sourcespaces STREQUAL \"\")
+    # write this sourcespace to the marker file
+    file(WRITE \${_catkin_marker_file} \"${CMAKE_INSTALL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}\")
+  else()
+    # append to existing list of sourcespaces if it's not in the list
+    list(FIND _existing_sourcespaces \"${CMAKE_INSTALL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}\" _existing_sourcespace_index)
+    if(_existing_sourcespace_index EQUAL -1)
+      file(APPEND \${_catkin_marker_file} \";${CMAKE_INSTALL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}\")
+    endif()
+  endif()
+else()
+  # create a new develspace marker file
+  # NOTE: extra care must be taken when running multiple catkin jobs in parallel 
+  #       so that this does not overwrite the result of a similar call in another package
+  file(WRITE \${_catkin_marker_file} \"${CMAKE_INSTALL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}\")
+endif()
+")
+endif()

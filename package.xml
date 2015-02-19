@@ -1,6 +1,6 @@
 <package>
   <name>euslisp</name>
-  <version>:{version}</version>
+  <version>9.11.0</version>
   <description>EusLisp is an integrated programming system for the
   research on intelligent robots based on Common Lisp and
   Object-Oriented programming</description>
