@@ -48,7 +48,7 @@ catkin_package(CFG_EXTRAS euslisp-extras.cmake)
 catkin_add_env_hooks(99.euslisp SHELLS sh DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/env-hooks)
 
 string(REGEX MATCH "catkin" need_catkin "$ENV{_}")
-if(need_catkin OR "${CATKIN_BUILD_BINARY_PACKAGE}")
+if(need_catkin)
   install(CODE "
 ## this is tricky force write catkin marker file
 set(_catkin_marker_file \"\${CMAKE_INSTALL_PREFIX}/.catkin\")
