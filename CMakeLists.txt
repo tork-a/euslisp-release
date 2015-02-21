@@ -48,7 +48,8 @@ catkin_package(CFG_EXTRAS euslisp-extras.cmake)
 catkin_add_env_hooks(99.euslisp SHELLS sh DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/env-hooks)
 
 string(REGEX MATCH "catkin" need_catkin "$ENV{_}")
-if(need_catkin)
+get_filename_component(install_dir_name ${CMAKE_INSTALL_PREFIX} NAME)
+if(need_catkin AND NOT install_dir_name MATCHES "install") # check if  install_prefix end with /install, we can  remove this section of we remove all rosrun euslisp ... usage
   install(CODE "
 ## this is tricky force write catkin marker file
 set(_catkin_marker_file \"\${CMAKE_INSTALL_PREFIX}/.catkin\")
