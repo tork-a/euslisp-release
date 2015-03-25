@@ -32,7 +32,7 @@ add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/lisp/Makefile
   WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/lisp/)
 add_custom_target(compile_euslisp ALL
   DEPENDS ${PROJECT_SOURCE_DIR}/lisp/Makefile
-  COMMAND export EUSDIR=${PROJECT_SOURCE_DIR} lt_cv_sys_lib_dlsearch_path_spec=${lt_cv_sys_lib_dlsearch_path_spec} && \$\(MAKE\) -C ${PROJECT_SOURCE_DIR}/lisp -f Makefile)
+  COMMAND export EUSDIR=${PROJECT_SOURCE_DIR} lt_cv_sys_lib_dlsearch_path_spec=${lt_cv_sys_lib_dlsearch_path_spec} && \$\(MAKE\) -C ${PROJECT_SOURCE_DIR}/lisp -f Makefile EUSRPATH=)
 
 add_custom_target(install_euslisp
   COMMAND export EUSDIR=${PROJECT_SOURCE_DIR} lt_cv_sys_lib_dlsearch_path_spec=${lt_cv_sys_lib_dlsearch_path_spec} && ${CMAKE_COMMAND} -E make_directory \${DESTDIR}${CMAKE_INSTALL_PREFIX}/bin && \$\(MAKE\) -C ${PROJECT_SOURCE_DIR}/lisp -f Makefile install PUBBINDIR=\${DESTDIR}${CMAKE_INSTALL_PREFIX}/bin)
