@@ -1,0 +1,37 @@
+cache: apt
+language:
+  - cpp
+python:
+  - "2.7"
+compiler:
+  - gcc
+before_install:
+  - export CI_SOURCE_PATH=$(pwd)
+  - export REPOSITORY_NAME=${PWD##*/}
+  - export ROS_DISTRO=hydro
+  - echo "Testing branch $TRAVIS_BRANCH of $REPOSITORY_NAME"
+  - sudo sh -c 'echo "deb http://packages.ros.org/ros-shadow-fixed/ubuntu `lsb_release -cs` main" > /etc/apt/sources.list.d/ros-latest.list'
+  - wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
+  - sudo apt-get update
+  - sudo apt-get -qq install git python-catkin-tools python-rosdep ros-${ROS_DISTRO}-rosbash ros-${ROS_DISTRO}-rospack
+  - mkdir -p ~/catkin_ws/src
+  - cd ~/catkin_ws/src
+  - git clone --depth 1 https://github.com/tork-a/euslisp-release euslisp
+  - cp -r ${CI_SOURCE_PATH}/patches/* euslisp/
+  - sed -i 's@:{version}@0.0.0@' euslisp/package.xml
+  - git clone --depth 1 https://github.com/tork-a/jskeus-release jskeus
+  - cd ..
+  - sudo rosdep init; rosdep update; rosdep install --from-paths src --ignore-src
+  - source /opt/ros/hydro/setup.bash
+install:
+  - catkin build -v -i
+script:
+  - ls -al devel
+  - source devel/setup.bash
+  - env
+  - cd devel/share/euslisp
+  - find jskeus/irteus/test -iname "*.l" | grep -v unittest.l | xargs -n1 irteusgl
+notifications:
+  email:
+    on_success: always
+    on_failure: always
