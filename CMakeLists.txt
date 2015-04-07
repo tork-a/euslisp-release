@@ -7,19 +7,19 @@ find_package(catkin)
 # check arch and os
 execute_process(COMMAND bash -c "gcc -dumpmachine" OUTPUT_VARIABLE gcc_dump_machine OUTPUT_STRIP_TRAILING_WHITESPACE)
 message("-- gcc dumpmachine returns ${gcc_dump_machine}")
-if(gcc_dump_machine MATCHES "x86_64-*")
+if(gcc_dump_machine MATCHES "x86_64-linux-.*")
   set(ARCHDIR "Linux64")
   set(MAKEFILE "Makefile.Linux64")
-elseif(gcc_dump_machine MATCHES "i686-*")
+elseif(gcc_dump_machine MATCHES "i686-linux-.*")
   set(ARCHDIR "Linux")
   set(MAKEFILE "Makefile.Linux.thread")
-elseif(gcc_dump_machine MATCHES "arm*-*")
+elseif(gcc_dump_machine MATCHES "arm.*-.*")
   set(ARCHDIR "LinuxARM")
   set(MAKEFILE "Makefile.LinuxARM")
-elseif(gcc_dump_machine MATCHES "cygwin*-*")
+elseif(gcc_dump_machine MATCHES "cygwin.*-.*")
   set(ARCHDIR "Cygwin")
   set(MAKEFILE "Makefile.Cygwin")
-elseif(gcc_dump_machine MATCHES "darwin*-*")
+elseif(gcc_dump_machine MATCHES ".*darwin.*")
   set(ARCHDIR "Darwin")
   set(MAKEFILE "Makefile.Darwin")
 else()
@@ -32,10 +32,10 @@ add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/lisp/Makefile
   WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/lisp/)
 add_custom_target(compile_euslisp ALL
   DEPENDS ${PROJECT_SOURCE_DIR}/lisp/Makefile
-  COMMAND export EUSDIR=${PROJECT_SOURCE_DIR} lt_cv_sys_lib_dlsearch_path_spec=${lt_cv_sys_lib_dlsearch_path_spec} && \$\(MAKE\) -C ${PROJECT_SOURCE_DIR}/lisp -f Makefile)
+  COMMAND export EUSDIR=${PROJECT_SOURCE_DIR} lt_cv_sys_lib_dlsearch_path_spec=${lt_cv_sys_lib_dlsearch_path_spec} LD_LIBRARY_PATH=${PROJECT_SOURCE_DIR}/${ARCHDIR}/lib:\$LD_LIBRARY_PATH && \$\(MAKE\) -C ${PROJECT_SOURCE_DIR}/lisp -f Makefile EUSRPATH=)
 
 add_custom_target(install_euslisp
-  COMMAND export EUSDIR=${PROJECT_SOURCE_DIR} lt_cv_sys_lib_dlsearch_path_spec=${lt_cv_sys_lib_dlsearch_path_spec} && ${CMAKE_COMMAND} -E make_directory \${DESTDIR}${CMAKE_INSTALL_PREFIX}/bin && \$\(MAKE\) -C ${PROJECT_SOURCE_DIR}/lisp -f Makefile install PUBBINDIR=\${DESTDIR}${CMAKE_INSTALL_PREFIX}/bin)
+  COMMAND export EUSDIR=${PROJECT_SOURCE_DIR} lt_cv_sys_lib_dlsearch_path_spec=${lt_cv_sys_lib_dlsearch_path_spec} LD_LIBRARY_PATH=${PROJECT_SOURCE_DIR}/${ARCHDIR}/lib:\$LD_LIBRARY_PATH && ${CMAKE_COMMAND} -E make_directory \${DESTDIR}${CMAKE_INSTALL_PREFIX}/bin && \$\(MAKE\) -C ${PROJECT_SOURCE_DIR}/lisp -f Makefile install PUBBINDIR=\${DESTDIR}${CMAKE_INSTALL_PREFIX}/bin)
 
 install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} --build . --target install_euslisp)")
 install(DIRECTORY contrib doc lib lisp models ${ARCHDIR}
