@@ -518,3 +518,4 @@
          suppor ARM ( by adding entry2 to fcode struct )
          do not raise error when no fontserver found in xwindow/Xtop.l
          add DRC testbed models
+         support md output in lib/llib/documentation.l
