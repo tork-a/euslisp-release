@@ -1,0 +1,12 @@
+Source: ros-jade-euslisp
+Section: misc
+Priority: extra
+Maintainer: Kei Okada <k-okada@jsk.t.u-tokyo.ac.jp>
+Build-Depends: debhelper (>= 9.0.0), libgl1-mesa-dev, libglu1-mesa-dev, libjpeg-dev, libpng12-dev, libpq-dev, libx11-dev, libxext-dev, ros-jade-catkin, ros-jade-cmake-modules, ros-jade-mk, xfonts-100dpi, xfonts-75dpi
+Homepage: http://euslisp.github.io/EusLisp/manual.html
+Standards-Version: 3.9.2
+
+Package: ros-jade-euslisp
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libgl1-mesa-dev, libglu1-mesa-dev, libjpeg-dev, libpng12-dev, libpq-dev, libx11-dev, libxext-dev, xfonts-100dpi, xfonts-75dpi
+Description: EusLisp is an integrated programming system for the research on intelligent robots based on Common Lisp and Object-Oriented programming
