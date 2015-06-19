@@ -12,34 +12,110 @@
              (setq ret (concatenate string ret "\\textless ")))
             ((eq (schar str i) #\>)
              (setq ret (concatenate string ret "\\textgreater ")))
+            ((eq (schar str i) #\\)
+	     (setq ret (concatenate string ret (format nil "~c" (schar str i))))(incf i)
+	     (setq ret (concatenate string ret (format nil "~c" (schar str i)))))
             (t
              (if (memq (schar str i) '(#\& #\# #\* #\_)) (setq ret (concatenate string ret "\\")))
              (setq ret (concatenate string ret (format nil "~c" (schar str i)))))))
     ret))
+
+(defun make-doc-string (doc)
+  (let ((ret ""))
+    (if (= (length doc) 0) (setq doc nil))
+    (case *output-format*
+	  (:html
+	   (cond ((null doc)
+		  doc)
+		 (t
+		  (dotimes (i (length doc))
+		    (cond ((eq (schar doc i) #\newline)
+			   (setq ret (concatenate string ret (format nil "\\\\~%"))))
+			  (t
+			   (setq ret (concatenate string ret (format nil "~c" (schar doc i)))))))
+		  ret)))
+	  (:md
+	   (cond ((null doc)
+		  doc)
+		 (t
+                  (let ((s (make-string-input-stream doc)) l pre)
+                    (while (setq l (read-line s nil nil))
+                      (cond ((and (> (length l) 0) (= (elt l 0) #\tab))
+                             (if (null pre) (setq ret (concatenate string ret (format nil "~%"))))
+                             (setq ret (concatenate string ret (format nil "        ~A~%" (subseq l 1)))) ;; 8 space is code block
+                             (setq pre t))
+                            (t
+                             (setq ret (concatenate string ret (format nil "~A <br>~%" l)) pre nil)))))
+		  ret))))
+    ))
+
+(defun make-arg-string (doc args type)
+  (let (arg has-key (args-str ""))
+    (setq *has-key* nil)
+    (case *output-format*
+	  (:html
+	   (dotimes (i (length args))
+	     (setq arg (elt args i))
+	     (if has-key (setq args-str (format nil "~A\\\\~%\\> " args-str)))
+	     (setq args-str (concatenate string args-str (format nil "~A "  arg)))
+	     (when (and doc (eq arg '&key) (> (- (length args) i) 2))
+	       (setq args-str (format nil "~A\\= " args-str) has-key t)
+	       (incf i)
+	       (setq arg (elt args i))
+	       (setq args-str (concatenate string args-str (format nil "~A \\` [~A]" arg type)))))
+	   )
+	  (:md
+	   (cond ((null doc)
+		  (dolist (arg args)
+		    (setq args-str (concatenate string args-str (format nil "*~A* " arg)))))
+		 (t
+		  (if args (setq args-str "&nbsp;&nbsp;&nbsp;"))
+		  (dotimes (i (length args))
+		    (setq arg (elt args i))
+		    (if has-key (setq args-str (format nil "~A<br>&nbsp;&nbsp;&nbsp;" args-str)))
+		    (setq args-str (concatenate string args-str (format nil "*~A* "  arg)))
+		    (when (and doc (eq arg '&key) (> (- (length args) i) 2))
+		      (setq has-key t)
+		      (incf i)
+		      (setq arg (elt args i))
+		      (setq args-str (concatenate string args-str (format nil "*~A* " arg))))))
+		 )
+	   ))
+    (setq *has-key* has-key)
+    args-str))
 
 (defun make-class-document (cls super slots)
   (labels ((write-classdesc (cls super slots)
              (let (slots-str (doc-str ""))
                (dolist (slot slots)
                  (setq slots-str (concatenate string slots-str (format nil "~A " slot))))
+               (if (documentation cls)
+                   (setq doc-str (make-doc-string (documentation cls))))
                (case *output-format*
                      (:html
-                      (format t "~A" (escape-string (format nil "\\classdesc{~A}{~A}{~A}{}~%" (send cls :name) (send super :name) slots-str))))
+                      (format t "~A" (escape-string (format nil "\\classdesc{~A}{~A}{~A}{~A}~%" (send cls :name) (send super :name) slots-str doc-str))))
                      (:md
-                      (format t "### ~A~%- :super **~A**~%- :slots ~A~%~%" (send cls :name) (send super :name) slots-str)))
+                      (format t "### ~A~%- :super **~A**~%- :slots ~A~%~%~A~%~%" (send cls :name) (send super :name) slots-str doc-str)))
                ))
            (write-methoddesc (method args doc)
              (let (args-str)
-               (dolist (arg args)
-                 (setq args-str (concatenate string args-str (format nil "~A " arg))))
+	       (setq doc (make-doc-string doc))
+	       (setq args-str (make-arg-string doc args "method"))
                (case *output-format*
                      (:html
-                      (format t "~A" (escape-string (format nil "~A{~A}{~A}{~A}~%" (if doc "\\methoddesc" "\\metdesc") method args-str doc))))
+		      (cond ((null doc)
+			     (format t "~A" (escape-string (format nil "\\metdesc{~A}{~A}{}~%" method args-str))))
+			    (*has-key*
+			     (format t "~A" (escape-string (format nil "\\longdescription{~A}{~A}{~A}~%" method args-str doc))))
+			    (t
+			     (format t "~A" (escape-string (format nil "\\methoddesc{~A}{~A}{~A}~%" method args-str doc))))))
                      (:md
-                      (if (not (equal doc ""))
-                          (format t "##### **~A** ~A~%- ~A~%~%" method args-str doc)
-                        (format t "~A ~A~%~%" method args-str))))
-             )))
+                      (cond ((null doc)
+			     (format t "~A ~A~%~%" method args-str))
+			    (t
+			     (format t "#### ~A~%~A~%~%- ~A~%~%" method args-str doc))
+			    )));; case
+             ))) ;; label
     (cond ((eq (class cls) metaclass)
            (write-classdesc cls super slots)
            (let ((method-with-document) (method-without-document))
@@ -76,22 +152,31 @@
   ))
 
 (defun make-function-document (funcname args)
-  (let (args-str doc)
+  (let (args-str doc has-key)
     (if (stringp (documentation funcname)) (setq doc (documentation funcname)))
     (if (null doc)
         (case *output-format*
               (:html
-               (format t "{\\\footnotesize~%"))
+               (format t "{\\footnotesize~%"))
               (:md
                )))
-    (dolist (arg args)
-      (setq args-str (concatenate string args-str (format nil "~A " arg))))
+    (setq args-str (make-arg-string doc args "function"))
+    (setq doc (make-doc-string doc))
     (case *output-format*
           (:html
-           (format t "~A" (escape-string (format nil "~A{~A}{~A}{~A}~%" (if doc "\\funcdesc" "\\fundesc") funcname args-str doc))))
-           (:md
-            (format t "##### **~A** ~A~%" funcname args-str)
-            (if (null (equal doc "")) (format t "- ~A~%" doc))
+	   (cond ((null doc)
+		  (format t "~A" (escape-string (format nil "\\fundesc{~A}{~A}~%" funcname args-str))))
+		 (*has-key*
+		  (format t "~A" (escape-string (format nil "\\longdescription{~A}{~A}{~A}~%" funcname args-str doc))))
+		 (t
+		  (format t "~A" (escape-string (format nil "\\funcdesc{~A}{~A}{~A}~%" funcname args-str doc))))
+		 ))
+	  (:md
+	    (cond ((null doc)
+		   (format t "~A ~A~%" funcname args-str))
+		  (t
+		   (format t "### ~A ###~%~A~%~%" funcname args-str)
+		   (format t "- ~A~%" doc)))
             (format t "~%" )))
     (if (null doc) 
         (case *output-format*
@@ -101,7 +186,7 @@
                )))
     ))
 
-(defun make-document (file &optional output-filename)
+(defun make-document (file &optional output-filename pkg)
   (defvar *classdoc* nil)
   (defvar *funcdoc-public* nil)
   (defvar *funcdoc-private* nil)
@@ -116,9 +201,9 @@
     (setf (symbol-function 'defclass-org) (symbol-function 'defclass)))
   (unless (fboundp 'defun-org)
     (setf (symbol-function 'defun-org) (symbol-function 'defun)))
-  (defmacro defclass (cls &key super slots)
+  (defmacro defclass (cls &key super slots documentation (doc documentation))
     `(progn
-       (defclass-org ,cls :super ,super :slots ,slots)
+       (defclass-org ,cls :super ,super :slots ,slots :doc ,doc)
        (push '(make-class-document ,cls ,super '(,@slots)) *classdoc*)))
   (defmacro defun (symbol args &rest body)
     `(progn
@@ -127,6 +212,10 @@
            (push '(make-function-document ',symbol ',args) *funcdoc-public*)
          (push '(make-function-document ',symbol ',args) *funcdoc-private*))
        ))
+  (if (and pkg (find-package pkg))
+      (do-symbols (v (find-package pkg))
+         (if (and (documentation v) (derivedp (send v :func) compiled-code))
+             (push `(make-function-document ',v nil) *funcdoc-public*))))
 
   (load file)
   (if output-filename
