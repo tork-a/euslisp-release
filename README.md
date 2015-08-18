@@ -1,3 +1,24 @@
+## euslisp (hydro) - 9.15.0-0
+
+The packages in the `euslisp` repository were released into the `hydro` distro by running `/usr/bin/bloom-release euslisp --track hydro --rosdistro hydro` on `Tue, 18 Aug 2015 06:33:01 -0000`
+
+The `euslisp` package was released.
+
+Version of package(s) in repository `euslisp`:
+- upstream repository: https://github.com/euslisp/EusLisp
+- release repository: https://github.com/tork-a/euslisp-release.git
+- rosdistro version: `9.14.0-0`
+- old version: `9.14.0-0`
+- new version: `9.15.0-0`
+
+Versions of tools used:
+- bloom version: `0.5.20`
+- catkin_pkg version: `0.2.10`
+- rosdep version: `0.11.2`
+- rosdistro version: `0.4.2`
+- vcstools version: `0.1.36`
+
+
 ## euslisp (jade) - 9.14.0-0
 
 The packages in the `euslisp` repository were released into the `jade` distro by running `/usr/bin/bloom-release --track jade --rosdistro jade euslisp` on `Sat, 20 Jun 2015 10:54:06 -0000`
