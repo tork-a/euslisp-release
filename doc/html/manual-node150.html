@@ -63,7 +63,7 @@ Graphic Context</A>
 
 <P>
 	<BR> 
-<A NAME="43881"></A>
+<A NAME="43901"></A>
 <BIG CLASS="XLARGE"><B>gcontext </B></BIG> [class]  <PRE><TT>
   :super   <B>Xobject</B> 
 <BR>  :slots 		 (gcid GCValues) 
@@ -82,11 +82,11 @@ In EusLisp, every xwindow has its default GC.
 
 <P>
 
-<A NAME="43898"></A>
+<A NAME="43918"></A>
 <BR>
 <IMG
  WIDTH="552" HEIGHT="92" ALIGN="BOTTOM" BORDER="0"
- SRC="manual-img100.png"
+ SRC="manual-img102.png"
  ALT="\begin{emtabbing}
 {\bf :create}
 \it\&amp;key \= (drawable defaultRootWindow) \\lq  [me...
@@ -107,7 +107,7 @@ created on the same screen.
 <BR>
 <BR>
 
-<A NAME="43910"></A>
+<A NAME="43930"></A>
 <B>:gc</B> [method]
 
 <DL COMPACT>
@@ -118,7 +118,7 @@ created on the same screen.
 <BR>
 <BR>
 
-<A NAME="43920"></A>
+<A NAME="43940"></A>
 <B>:free</B> [method]
 
 <DL COMPACT>
@@ -129,7 +129,7 @@ created on the same screen.
 <BR>
 <BR>
 
-<A NAME="43930"></A>
+<A NAME="43950"></A>
 <B>:copy</B> [method]
 
 <DL COMPACT>
@@ -140,7 +140,7 @@ created on the same screen.
 <BR>
 <BR>
 
-<A NAME="43940"></A>
+<A NAME="43960"></A>
 <B>:foreground</B> <EM>&amp;optional color </EM>[method]
 
 <DL COMPACT>
@@ -152,7 +152,7 @@ it is set to the foreground color. <EM>Color</EM> is a pixel value.
 <BR>
 <BR>
 
-<A NAME="43952"></A>
+<A NAME="43972"></A>
 <B>:background</B> <EM>&amp;optional color </EM>[method]
 
 <DL COMPACT>
@@ -164,7 +164,7 @@ it is set to the background color. <EM>Color</EM> is a pixel value.
 <BR>
 <BR>
 
-<A NAME="43964"></A>
+<A NAME="43984"></A>
 <B>:foreback</B> <EM>fore back </EM>[method]
 
 <DL COMPACT>
@@ -175,7 +175,7 @@ it is set to the background color. <EM>Color</EM> is a pixel value.
 <BR>
 <BR>
 
-<A NAME="43974"></A>
+<A NAME="43994"></A>
 <B>:planemask</B> <EM>&amp;optional plane-mask </EM>[method]
 
 <DL COMPACT>
@@ -186,7 +186,7 @@ it is set to the background color. <EM>Color</EM> is a pixel value.
 <BR>
 <BR>
 
-<A NAME="43984"></A>
+<A NAME="44004"></A>
 <B>:function</B> <EM>x </EM>[method]
 
 <DL COMPACT>
@@ -206,7 +206,7 @@ it is set to the background color. <EM>Color</EM> is a pixel value.
 <BR>
 <BR>
 
-<A NAME="43996"></A>
+<A NAME="44016"></A>
 <B>:font</B> <EM>x </EM>[method]
 
 <DL COMPACT>
@@ -221,7 +221,7 @@ If <EM>x</EM> is NIL (not given), the current font-ID of this GC is returned.
 <BR>
 <BR>
 
-<A NAME="44012"></A>
+<A NAME="44032"></A>
 <B>:line-width</B> <EM>x </EM>[method]
 
 <DL COMPACT>
@@ -232,7 +232,7 @@ If <EM>x</EM> is NIL (not given), the current font-ID of this GC is returned.
 <BR>
 <BR>
 
-<A NAME="44022"></A>
+<A NAME="44042"></A>
 <B>:line-style</B> <EM>x </EM>[method]
 
 <DL COMPACT>
@@ -243,7 +243,7 @@ If <EM>x</EM> is NIL (not given), the current font-ID of this GC is returned.
 <BR>
 <BR>
 
-<A NAME="44032"></A>
+<A NAME="44052"></A>
 <B>:dash</B> <EM>&amp;rest x </EM>[method]
 
 <DL COMPACT>
@@ -255,7 +255,7 @@ If <EM>x</EM> is NIL (not given), the current font-ID of this GC is returned.
 <BR>
 <BR>
 
-<A NAME="44044"></A>
+<A NAME="44064"></A>
 <B>:tile</B> <EM>pixmap </EM>[method]
 
 <DL COMPACT>
@@ -266,7 +266,7 @@ If <EM>x</EM> is NIL (not given), the current font-ID of this GC is returned.
 <BR>
 <BR>
 
-<A NAME="44055"></A>
+<A NAME="44075"></A>
 <B>:stipple</B> <EM>pixmap </EM>[method]
 
 <DL COMPACT>
@@ -277,7 +277,7 @@ If <EM>x</EM> is NIL (not given), the current font-ID of this GC is returned.
 <BR>
 <BR>
 
-<A NAME="44066"></A>
+<A NAME="44086"></A>
 <B>:get-attribute</B> <EM>attr </EM>[method]
 
 <DL COMPACT>
@@ -292,11 +292,11 @@ An integer value representing the attribute is returned.
 <BR>
 <BR>
 
-<A NAME="44078"></A>
+<A NAME="44098"></A>
 <BR>
 <IMG
  WIDTH="560" HEIGHT="35" ALIGN="BOTTOM" BORDER="0"
- SRC="manual-img101.png"
+ SRC="manual-img103.png"
  ALT="\begin{emtabbing}
 {\bf :change-attributes}
 \it\&amp;key \= function plane-mask fore...
@@ -318,7 +318,7 @@ More than one attributes are changed at the same time.
 <P>
              <P>
 
-<A NAME="44089"></A>
+<A NAME="44109"></A>
 <B>font-id</B> <EM>fontname </EM>[function]
 
 <DL COMPACT>
@@ -338,7 +338,7 @@ is printed.
 
 <P>
 
-<A NAME="44105"></A>
+<A NAME="44125"></A>
 <B>textdots</B> <EM>str font-id </EM>[function]
 
 <DL COMPACT>
@@ -384,7 +384,7 @@ of the <EM>str</EM> (string) in dots.
 <!--End of Navigation Panel-->
 <ADDRESS>
 
-2015-10-21
+2016-03-20
 </ADDRESS>
 </BODY>
 </HTML>
