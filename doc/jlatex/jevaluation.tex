@@ -565,7 +565,7 @@ breakを終了したいとき、control-Dを入力する。}
 symbol-nameの中に部分文字列として{\em key}を含むすべてのsymbolを表示する。}
 
 \funcdesc{apropos-list}{key}{
-{\bf appropos}と似ているが表示はしない、しかしリストとして結果を返す。}
+{\bf apropos}と似ているが表示はしない、しかしリストとして結果を返す。}
 
 \funcdesc{constants}{\&optional (string  "") (pkg *package*)}{
 {\em pkg}の中に定数として定義され{\em string}と合うsymbolをすべてリスト
@@ -638,6 +638,29 @@ EusLispのリーダとプリンタは、どのようなオブジェクトも再�
 {\em symbol}にバインドされたオブジェクトを{\em file}にダンプする。
 その{\em file}は簡単にロードすることによって読み戻すことができる。}
 \end{refdesc}
+
+\begin{verbatim}
+(setq a (make-cube 1 2 3))
+
+;; sample for dump-object
+(dump-object "a-cube.l" a)
+(with-open-file
+  (f "a-cube.l" :direction :input)
+  (setq a (read f)))
+(print a)
+
+;; sample for dump-structure
+(dump-structure "a-cube.l" a)
+(with-open-file
+  (f "a-cube.l" :direction :input)
+  (setq a (read f)))
+(print a)
+
+;; sample for dump-loadable-structure
+(dump-loadable-structure "a-cube.l" a)
+(load "a-cube.l")
+(print a)
+\end{verbatim}
 
 \subsection{プロセスイメージ保存}
 このプロセスイメージ保存は、Solarisの動的ロード機能に深く依存しているため、

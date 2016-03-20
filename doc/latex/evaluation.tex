@@ -620,7 +620,7 @@ It prints all the symbols whose symbol-names include the
 {\em key} as a substring. Case insensitive.}
 
 \funcdesc{apropos-list}{key}{
-is similar to {\bf appropos} but does no printing and returns the
+is similar to {\bf apropos} but does no printing and returns the
 result as a list.}
 
 \funcdesc{constants}{\&optional (string  "") (pkg *package*)}{
@@ -693,6 +693,29 @@ dumps objects to {\em file} in a format as they can be read back again.}
 dumps objects bound to symbols to {\em file}. The file can be read back
 again by simply loading it.}
 \end{refdesc}
+
+\begin{verbatim}
+(setq a (make-cube 1 2 3))
+
+;; sample for dump-object
+(dump-object "a-cube.l" a)
+(with-open-file
+  (f "a-cube.l" :direction :input)
+  (setq a (read f)))
+(print a)
+
+;; sample for dump-structure
+(dump-structure "a-cube.l" a)
+(with-open-file
+  (f "a-cube.l" :direction :input)
+  (setq a (read f)))
+(print a)
+
+;; sample for dump-loadable-structure
+(dump-loadable-structure "a-cube.l" a)
+(load "a-cube.l")
+(print a)
+\end{verbatim}
 
 \subsection{Process Image Saving}
 This process image saving is no longer supported on Solaris2 based
