@@ -41,9 +41,22 @@ add_custom_target(install_euslisp
   COMMAND export EUSDIR=${PROJECT_SOURCE_DIR} lt_cv_sys_lib_dlsearch_path_spec=${lt_cv_sys_lib_dlsearch_path_spec} LD_LIBRARY_PATH=${PROJECT_SOURCE_DIR}/${ARCHDIR}/lib:\$LD_LIBRARY_PATH && ${CMAKE_COMMAND} -E make_directory \${DESTDIR}${CMAKE_INSTALL_PREFIX}/bin && \$\(MAKE\) -C ${PROJECT_SOURCE_DIR}/lisp -f Makefile install PUBBINDIR=\${DESTDIR}${CMAKE_INSTALL_PREFIX}/bin)
 
 install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} --build . --target install_euslisp)")
-install(DIRECTORY contrib doc lib lisp models ${ARCHDIR}
+install(DIRECTORY contrib lib lisp models ${ARCHDIR}
   DESTINATION share/euslisp/jskeus/eus/
   USE_SOURCE_PERMISSIONS)
+install(DIRECTORY doc
+  DESTINATION share/euslisp/jskeus/eus/
+  USE_SOURCE_PERMISSIONS
+  PATTERN "doc/html" EXCLUDE
+  PATTERN "doc/mails" EXCLUDE
+  PATTERN "doc/hirukawa" EXCLUDE
+  PATTERN "doc/help.cltl" EXCLUDE
+  PATTERN "doc/publications" EXCLUDE
+  PATTERN "doc/latex/*.tex" EXCLUDE
+  PATTERN "doc/latex/fig" EXCLUDE
+  PATTERN "doc/jlatex/*.tex" EXCLUDE
+  PATTERN "doc/jlatex/fig" EXCLUDE
+  )
 install(FILES package.xml DESTINATION share/euslisp/)
 install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink lisp/c include WORKING_DIRECTORY \$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/share/euslisp/jskeus/eus/)")
 
