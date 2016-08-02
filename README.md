@@ -1,3 +1,26 @@
+## euslisp (kinetic) - 9.20.0-0
+
+The packages in the `euslisp` repository were released into the `kinetic` distro by running `/usr/bin/bloom-release euslisp --rosdistro kinetic --track kinetic` on `Tue, 02 Aug 2016 09:33:18 -0000`
+
+The `euslisp` package was released.
+
+Version of package(s) in repository `euslisp`:
+
+- upstream repository: https://github.com/euslisp/EusLisp
+- release repository: https://github.com/tork-a/euslisp-release.git
+- rosdistro version: `9.19.0-0`
+- old version: `9.19.0-0`
+- new version: `9.20.0-0`
+
+Versions of tools used:
+
+- bloom version: `0.5.21`
+- catkin_pkg version: `0.2.10`
+- rosdep version: `0.11.5`
+- rosdistro version: `0.4.7`
+- vcstools version: `0.1.38`
+
+
 ## euslisp (jade) - 9.20.0-0
 
 The packages in the `euslisp` repository were released into the `jade` distro by running `/usr/bin/bloom-release euslisp --rosdistro jade --track jade` on `Tue, 02 Aug 2016 09:11:15 -0000`
