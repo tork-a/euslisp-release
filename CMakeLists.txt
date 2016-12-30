@@ -52,9 +52,7 @@ install(DIRECTORY doc
   PATTERN "doc/hirukawa" EXCLUDE
   PATTERN "doc/help.cltl" EXCLUDE
   PATTERN "doc/publications" EXCLUDE
-  PATTERN "doc/latex/*.tex" EXCLUDE
   PATTERN "doc/latex/fig" EXCLUDE
-  PATTERN "doc/jlatex/*.tex" EXCLUDE
   PATTERN "doc/jlatex/fig" EXCLUDE
   )
 install(FILES package.xml DESTINATION share/euslisp/)
