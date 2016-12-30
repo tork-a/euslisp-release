@@ -1,3 +1,26 @@
+## euslisp (jade) - 9.22.0-0
+
+The packages in the `euslisp` repository were released into the `jade` distro by running `/usr/bin/bloom-release euslisp -r jade --track jade` on `Fri, 30 Dec 2016 04:25:15 -0000`
+
+The `euslisp` package was released.
+
+Version of package(s) in repository `euslisp`:
+
+- upstream repository: https://github.com/euslisp/EusLisp
+- release repository: https://github.com/tork-a/euslisp-release.git
+- rosdistro version: `9.21.0-0`
+- old version: `9.21.0-0`
+- new version: `9.22.0-0`
+
+Versions of tools used:
+
+- bloom version: `0.5.23`
+- catkin_pkg version: `0.2.10`
+- rosdep version: `0.11.5`
+- rosdistro version: `0.5.0`
+- vcstools version: `0.1.39`
+
+
 ## euslisp (indigo) - 9.22.0-0
 
 The packages in the `euslisp` repository were released into the `indigo` distro by running `/usr/bin/bloom-release euslisp -r indigo --track indigo` on `Fri, 30 Dec 2016 03:50:18 -0000`
