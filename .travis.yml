@@ -8,7 +8,7 @@ compiler:
 before_install:
   - export CI_SOURCE_PATH=$(pwd)
   - export REPOSITORY_NAME=${PWD##*/}
-  - export ROS_DISTRO=hydro
+  - export ROS_DISTRO=indigo
   - echo "Testing branch $TRAVIS_BRANCH of $REPOSITORY_NAME"
   - sudo sh -c 'echo "deb http://packages.ros.org/ros-shadow-fixed/ubuntu `lsb_release -cs` main" > /etc/apt/sources.list.d/ros-latest.list'
   - wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
@@ -22,7 +22,7 @@ before_install:
   - git clone --depth 1 https://github.com/tork-a/jskeus-release jskeus
   - cd ..
   - sudo rosdep init; rosdep update; rosdep install --from-paths src --ignore-src
-  - source /opt/ros/hydro/setup.bash
+  - source /opt/ros/${ROS_DISTRO}/setup.bash
 install:
   - catkin build -v -i
 script:
