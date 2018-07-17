@@ -72,19 +72,25 @@ if(EXISTS \${_catkin_marker_file})
   file(READ \${_catkin_marker_file} _existing_sourcespaces)
   if(_existing_sourcespaces STREQUAL \"\")
     # write this sourcespace to the marker file
-    file(WRITE \${_catkin_marker_file} \"${CMAKE_INSTALL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}\")
+    set(_catkin_marker_file_content \" ${CMAKE_INSTALL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}\") # head space is necessary because it is converted to semicolon.
+    separate_arguments(_catkin_marker_file_content)
+    file(APPEND \${_catkin_marker_file} \"${_catkin_marker_file_content}\")
   else()
     # append to existing list of sourcespaces if it's not in the list
     list(FIND _existing_sourcespaces \"${CMAKE_INSTALL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}\" _existing_sourcespace_index)
     if(_existing_sourcespace_index EQUAL -1)
-      file(APPEND \${_catkin_marker_file} \"\;${CMAKE_INSTALL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}\")
+      set(_catkin_marker_file_content \" ${CMAKE_INSTALL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}\") # head space is necessary because it is converted to semicolon.
+      separate_arguments(_catkin_marker_file_content)
+      file(APPEND \${_catkin_marker_file} \"${_catkin_marker_file_content}\")
     endif()
   endif()
 else()
   # create a new develspace marker file
   # NOTE: extra care must be taken when running multiple catkin jobs in parallel 
   #       so that this does not overwrite the result of a similar call in another package
-  file(WRITE \${_catkin_marker_file} \"${CMAKE_INSTALL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}\")
+  set(_catkin_marker_file_content \" ${CMAKE_INSTALL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}\") # head space is necessary because it is converted to semicolon.
+  separate_arguments(_catkin_marker_file_content)
+  file(APPEND \${_catkin_marker_file} \"${_catkin_marker_file_content}\")
 endif()
 ")
 endif()
