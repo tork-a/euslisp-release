@@ -247,6 +247,9 @@
        (if (null entry) (setq entry (get sym 'builtin-function-entry)))
        (send self :clearpush)
        (send self :reset-vsp)
+       (unless (functionp sym)
+         (format *error-output* "; ~C[34;7m~S~C[0;34m is assumed to be undefined function~C[0m~%"
+                 #x1b sym #x1b #x1b))
        (if entry
 	   (format cfile "	w=(pointer)~A(ctx,~d,local+~d); /*~A*/~%"
 		     entry n (- pushcount n) sym)
@@ -631,7 +634,7 @@
     (format cfile "#include \"eus.h\"~%")	;should specify -I opt.
     #+:rgc
     (format cfile "#include \"collector.h\"~%")
-    (format cfile "#include \"~A\"~%" (namestring hname))
+    (format cfile "#include \"~A.~A\"~%" (pathname-name hname) (pathname-type hname))
 #-:alpha
     (format cfile "#pragma init (register_~a)~%" entry)
     (format cfile "extern double fabs();~%")
