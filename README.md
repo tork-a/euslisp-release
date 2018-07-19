@@ -1,3 +1,26 @@
+## euslisp (indigo) - 9.25.0-0
+
+The packages in the `euslisp` repository were released into the `indigo` distro by running `/usr/bin/bloom-release euslisp --track indigo --rosdistro indigo` on `Thu, 19 Jul 2018 03:36:53 -0000`
+
+The `euslisp` package was released.
+
+Version of package(s) in repository `euslisp`:
+
+- upstream repository: https://github.com/euslisp/EusLisp
+- release repository: https://github.com/tork-a/euslisp-release.git
+- rosdistro version: `9.24.0-2`
+- old version: `9.24.0-2`
+- new version: `9.25.0-0`
+
+Versions of tools used:
+
+- bloom version: `0.6.6`
+- catkin_pkg version: `0.4.2`
+- rosdep version: `0.12.2`
+- rosdistro version: `0.6.8`
+- vcstools version: `0.1.40`
+
+
 ## euslisp (lunar) - 9.24.0-0
 
 The packages in the `euslisp` repository were released into the `lunar` distro by running `/usr/bin/bloom-release euslisp -y --track lunar --rosdistro lunar` on `Tue, 17 Jul 2018 10:29:44 -0000`
