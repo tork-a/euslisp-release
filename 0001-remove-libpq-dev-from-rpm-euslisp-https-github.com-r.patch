@@ -1,0 +1,35 @@
+From ed4adc81efe8475c1cfb9cde037433828b0ee037 Mon Sep 17 00:00:00 2001
+From: Kei Okada <k-okada@jsk.t.u-tokyo.ac.jp>
+Date: Thu, 19 Jul 2018 11:13:50 +0900
+Subject: [PATCH] remove libpq-dev from rpm/euslisp
+ https://github.com/ros/rosdistro/pull/18510
+
+---
+ package.xml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/package.xml b/package.xml
+index f7ee564..e8a0fbc 100644
+--- a/package.xml
++++ b/package.xml
+@@ -20,7 +20,7 @@
+   <build_depend>libx11-dev</build_depend>
+   <build_depend>libxext</build_depend>
+   <build_depend>libpng-dev</build_depend>
+-  <build_depend>libpq-dev</build_depend>
++  <!-- <build_depend>libpq-dev</build_depend> -->
+   <build_depend>cmake_modules</build_depend>
+   <build_depend>mk</build_depend>
+   <build_depend>xfonts-100dpi</build_depend>
+@@ -31,7 +31,7 @@
+   <run_depend>libx11-dev</run_depend>
+   <run_depend>libxext</run_depend>
+   <run_depend>libpng-dev</run_depend>
+-  <run_depend>libpq-dev</run_depend>
++  <!-- <run_depend>libpq-dev</run_depend> -->
+   <run_depend>xfonts-100dpi</run_depend>
+   <run_depend>xfonts-75dpi</run_depend>
+ 
+-- 
+2.7.4
+
