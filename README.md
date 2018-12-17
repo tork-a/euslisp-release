@@ -1,3 +1,26 @@
+## euslisp (lunar) - 9.26.0-0
+
+The packages in the `euslisp` repository were released into the `lunar` distro by running `/usr/bin/bloom-release -y euslisp --track lunar --rosdistro lunar` on `Mon, 17 Dec 2018 11:48:41 -0000`
+
+The `euslisp` package was released.
+
+Version of package(s) in repository `euslisp`:
+
+- upstream repository: https://github.com/euslisp/EusLisp
+- release repository: https://github.com/tork-a/euslisp-release.git
+- rosdistro version: `9.25.0-0`
+- old version: `9.25.0-0`
+- new version: `9.26.0-0`
+
+Versions of tools used:
+
+- bloom version: `0.6.6`
+- catkin_pkg version: `0.4.8`
+- rosdep version: `0.12.2`
+- rosdistro version: `0.6.9`
+- vcstools version: `0.1.40`
+
+
 ## euslisp (kinetic) - 9.26.0-0
 
 The packages in the `euslisp` repository were released into the `kinetic` distro by running `/usr/bin/bloom-release -y euslisp --track kinetic --rosdistro kinetic` on `Mon, 17 Dec 2018 11:38:49 -0000`
