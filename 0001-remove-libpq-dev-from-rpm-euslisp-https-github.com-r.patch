@@ -1,4 +1,4 @@
-From ed4adc81efe8475c1cfb9cde037433828b0ee037 Mon Sep 17 00:00:00 2001
+From 00cb478ee8c62bd6aeeafb1a8bfa0e04d747fe3c Mon Sep 17 00:00:00 2001
 From: Kei Okada <k-okada@jsk.t.u-tokyo.ac.jp>
 Date: Thu, 19 Jul 2018 11:13:50 +0900
 Subject: [PATCH] remove libpq-dev from rpm/euslisp
@@ -9,7 +9,7 @@ Subject: [PATCH] remove libpq-dev from rpm/euslisp
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/package.xml b/package.xml
-index f7ee564..e8a0fbc 100644
+index 7209531c..6eb16bd5 100644
 --- a/package.xml
 +++ b/package.xml
 @@ -20,7 +20,7 @@
@@ -31,5 +31,5 @@ index f7ee564..e8a0fbc 100644
    <run_depend>xfonts-75dpi</run_depend>
  
 -- 
-2.7.4
+2.17.1
 
