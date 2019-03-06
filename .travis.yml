@@ -13,6 +13,7 @@ before_install:
   - sudo sh -c 'echo "deb http://packages.ros.org/ros-shadow-fixed/ubuntu `lsb_release -cs` main" > /etc/apt/sources.list.d/ros-latest.list'
   - wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
   - sudo apt-get update
+  - sudo apt-get install dpkg -y  # necessary for catkin-pkg to be installable
   - sudo apt-get -qq install git python-catkin-tools python-rosdep ros-${ROS_DISTRO}-rosbash ros-${ROS_DISTRO}-rospack
   - mkdir -p ~/catkin_ws/src
   - cd ~/catkin_ws/src
