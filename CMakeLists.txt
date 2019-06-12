@@ -95,7 +95,7 @@ endif()
 ")
 else()
   install(CODE "
-file(GLOB catkin_install_files \$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/*.py \$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/setup.* \$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/env.* \$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/.ros* \$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/.catkin*)
+file(GLOB catkin_install_files \$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/*.py \$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/*setup.* \$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/env.* \$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/.ros* \$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/.catkin*)
 foreach(file \${catkin_install_files})
   message(\"Removing: \${file}\")
   file(REMOVE \${file})
