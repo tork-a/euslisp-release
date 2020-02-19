@@ -1,3 +1,26 @@
+## euslisp (melodic) - 9.27.0-1
+
+The packages in the `euslisp` repository were released into the `melodic` distro by running `/usr/bin/bloom-release euslisp --track melodic --rosdistro melodic` on `Wed, 19 Feb 2020 10:51:26 -0000`
+
+The `euslisp` package was released.
+
+Version of package(s) in repository `euslisp`:
+
+- upstream repository: https://github.com/euslisp/EusLisp
+- release repository: https://github.com/tork-a/euslisp-release.git
+- rosdistro version: `9.26.0-1`
+- old version: `9.26.0-1`
+- new version: `9.27.0-1`
+
+Versions of tools used:
+
+- bloom version: `0.9.0`
+- catkin_pkg version: `0.4.16`
+- rosdep version: `0.18.0`
+- rosdistro version: `0.8.0`
+- vcstools version: `0.1.42`
+
+
 ## euslisp (kinetic) - 9.27.0-1
 
 The packages in the `euslisp` repository were released into the `kinetic` distro by running `/usr/bin/bloom-release euslisp --track kinetic --rosdistro kinetic` on `Wed, 19 Feb 2020 10:44:40 -0000`
