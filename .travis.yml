@@ -1,76 +1,39 @@
 # Travis Continuous Integration Configuration File
+os: linux
+dist: bionic
+sudo: required
+cache: apt
+services: docker
 matrix:
   include:
-    - os: linux
-      dist: trusty
-      sudo: required
-      cache: apt
-      env: DOCKER_IMAGE=ubuntu:trusty
-    - os: linux
-      dist: trusty
-      sudo: required
-      cache: apt
-      env: DOCKER_IMAGE=ubuntu:xenial
-    - os: linux
-      dist: trusty
-      sudo: required
-      cache: apt
-      env: DOCKER_IMAGE=ubuntu:bionic
-    - os: linux
-      dist: trusty
-      sudo: required
-      cache: apt
-      env: DOCKER_IMAGE=ubuntu:trusty ROS_DISTRO=indigo
-    - os: linux
-      dist: trusty
-      sudo: required
-      cache: apt
-      env: DOCKER_IMAGE=ubuntu:xenial ROS_DISTRO=kinetic
-    - os: linux
-      dist: trusty
-      sudo: required
-      cache: apt
-      env: DOCKER_IMAGE=ubuntu:bionic ROS_DISTRO=melodic
-    - os: linux
-      dist: trusty
-      sudo: required
-      cache: apt
-      env: DOCKER_IMAGE=osrf/ubuntu_armhf:trusty
-    - os: linux
-      dist: trusty
-      sudo: required
-      cache: apt
-      env: DOCKER_IMAGE=osrf/ubuntu_armhf:xenial
-    - os: linux
-      dist: trusty
-      sudo: required
-      cache: apt
-      env: DOCKER_IMAGE=osrf/ubuntu_arm64:trusty
-    - os: linux
-      dist: trusty
-      sudo: required
-      cache: apt
-      env: DOCKER_IMAGE=osrf/ubuntu_arm64:xenial
-    - os: linux
-      dist: trusty
-      sudo: required
-      cache: apt
-      env: DOCKER_IMAGE=debian:jessie
-    - os: linux
-      dist: trusty
-      sudo: required
-      cache: apt
-      env: DOCKER_IMAGE=debian:stretch
-    - os: linux
-      dist: trusty
-      sudo: required
-      cache: apt
-      env: DOCKER_IMAGE=osrf/debian_arm64:jessie
-    - os: linux
-      dist: trusty
-      sudo: required
-      cache: apt
-      env: DOCKER_IMAGE=osrf/debian_arm64:stretch
+    - env: DOCKER_IMAGE=ubuntu:trusty
+    - env: DOCKER_IMAGE=ubuntu:xenial
+    - env: DOCKER_IMAGE=ubuntu:bionic
+    - env: DOCKER_IMAGE=ubuntu:trusty ROS_DISTRO=indigo
+    - env: DOCKER_IMAGE=ubuntu:xenial ROS_DISTRO=kinetic
+    - env: DOCKER_IMAGE=ubuntu:bionic ROS_DISTRO=melodic
+    - env: DOCKER_IMAGE=osrf/ubuntu_armhf:trusty
+    - env: DOCKER_IMAGE=osrf/ubuntu_armhf:xenial
+    - env: DOCKER_IMAGE=osrf/ubuntu_arm64:trusty
+    - env: DOCKER_IMAGE=osrf/ubuntu_arm64:xenial
+    - env: DOCKER_IMAGE=debian:stretch
+    - env: DOCKER_IMAGE=osrf/debian_arm64:stretch
+    - env: QEMU=amd64 DOCKER_IMAGE=amd64/debian:unstable # amd64
+    - env: QEMU=aarch64 DOCKER_IMAGE=arm64v8/debian:buster # arm64
+    - env: QEMU=arm DOCKER_IMAGE=arm32v5/debian:jessie # armel
+    - env: QEMU=arm DOCKER_IMAGE=arm32v7/debian:jessie # armhf
+    # hppa
+    # hurd-i386
+    - env: QEMU=i386 DOCKER_IMAGE=i386/debian:unstable # i386
+    # ia64
+    # m68k
+    - env: QEMU=mips64el DOCKER_IMAGE=loongnix/debian:buster # mips64el
+    # mipsel
+    # - env: QEMU=ppc DOCKER_IMAGE=vicamo/debian:unstable-powerpc # powerpc / somehow failing loading eusgl
+    - env: QEMU=ppc64le DOCKER_IMAGE=ppc64le/debian:buster # ppc64
+    # riscv64
+    # sh4
+    # sparc64
     - os: osx
 env:
   global:
@@ -91,12 +54,14 @@ before_install: # Use this to prepare the system to install prerequisites or dep
 install:
   - export CI_SOURCE_PATH=$(pwd)
   - export REPOSITORY_NAME=${PWD##*/}
+  - if [[ "$QEMU" != "" ]]; then sudo apt-get install -y -qq qemu-user-static; ls /usr/bin/qemu-*-static; export QEMU_VOLUME="-v /usr/bin/qemu-$QEMU-static:/usr/bin/qemu-$QEMU-static" ; fi
+  - if [[ "$QEMU" != "" ]]; then docker run --rm --privileged multiarch/qemu-user-static:register; fi
   - if [[ "$DOCKER_IMAGE" == *"arm"* ]]; then sudo apt-get install -y -qq qemu-user-static; fi
   - if [[ "$DOCKER_IMAGE" == *"arm"* ]]; then git clone http://github.com/euslisp/jskeus ${HOME}/jskeus; fi
 script:
-  - echo "Testing branch $TRAVIS_BRANCH of $REPOSITORY_NAME"
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then docker run --rm -i -v $HOME:$HOME -e "TRAVIS_OS_NAME=$TRAVIS_OS_NAME" -e "CI_SOURCE_PATH=$CI_SOURCE_PATH" -e "HOME=$HOME" -e "MAKEFLAGS=$MAKEFLAGS" -e "DOCKER_IMAGE=$DOCKER_IMAGE" -t $DOCKER_IMAGE sh -c "cd $CI_SOURCE_PATH; ./.travis.sh"; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx"   ]; then  source ./.travis.sh; fi
+  - echo "Testing branch $TRAVIS_BRANCH of $REPOSITORY_NAME on $QEMU_VOLUME"
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then docker run --rm -i $QEMU_VOLUME -v $HOME:$HOME -e "QEMU=$QEMU" -e "TRAVIS_OS_NAME=$TRAVIS_OS_NAME" -e "CI_SOURCE_PATH=$CI_SOURCE_PATH" -e "HOME=$HOME" -e "MAKEFLAGS=$MAKEFLAGS" -e "DOCKER_IMAGE=$DOCKER_IMAGE" -t $DOCKER_IMAGE sh -c "cd $CI_SOURCE_PATH; ./.travis.sh"; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx"   ]; then ./.travis.sh; fi
 after_failure:
   - echo "failure"
 after_success:
@@ -124,7 +89,7 @@ after_deploy:
   - git checkout -b $(git name-rev --name-only $(git rev-parse $TRAVIS_BRANCH) | sed 's@remotes/upstream/@@')
   # send doc to current repo
   - git rm -f doc/{latex,jlatex,html}/*.{pdf,ps,dvi,html,png}
-  - git add doc/{latex,jlatex}/*.{pdf,ps,dvi} doc/html/*.{html,png}
+  - git add doc/{latex,jlatex}/*.{pdf,ps,dvi,hlp} doc/html/*.{html,png}
   - git status
   - git branch
   - git commit -m "Build documents from $TRAVIS_TAG@$TRAVIS_COMMIT" doc/
