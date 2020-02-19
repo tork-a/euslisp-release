@@ -132,8 +132,8 @@ tracks:
     - git-bloom-generate -y rosrpm --prefix release/:{ros_distro} :{ros_distro} -i
       :{release_inc}
     devel_branch: null
-    last_release: EusLisp-9.26
-    last_version: 9.26.0
+    last_release: EusLisp-9.27
+    last_version: 9.27.0
     name: upstream
     patches: patches
     release_inc: '1'
