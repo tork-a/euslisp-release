@@ -45,10 +45,12 @@ if [ "$TRAVIS_OS_NAME" == "linux" ]; then
 fi
 if [ "$TRAVIS_OS_NAME" == "osx" ]; then
     travis_time_start setup.install
+    # https://apple.stackexchange.com/questions/393481/homebrew-cask-download-failure-ssl-certificate-problem-certificate-has-expired
     # skip if already installed
     # https://discourse.brew.sh/t/skip-ignore-brew-install-if-package-is-already-installed/633/2
     # brew install jpeg libpng mesalib-glw;
-    # use HOMEBREW_NO_AUT_UPDATE to fix unexpected keyword error https://travis-ci.community/t/syntax-error-unexpected-keyword-rescue-expecting-keyword-end-in-homebrew/5623
+    echo insecure >> ~/.curlrc
+    export HOMEBREW_CURLRC=1
     brew list jpeg &>/dev/null || HOMEBREW_NO_AUTO_UPDATE=1 brew install jpeg
     brew list libpng &>/dev/null || HOMEBREW_NO_AUTO_UPDATE=1 brew install libpng
     brew list mesalib-glw &>/dev/null || HOMEBREW_NO_AUTO_UPDATE=1 brew install mesalib-glw
@@ -60,7 +62,7 @@ fi
 ### for multiarch compile test
 if [ "$QEMU" != "" ]; then
     travis_time_start install.dpkg-dev
-    apt-get install -qq -y dpkg-dev
+    apt-get install -qq -y dpkg-dev patchutils
     travis_time_end
 
     echo "uname -a : $(uname -a)"
@@ -69,10 +71,24 @@ if [ "$QEMU" != "" ]; then
     echo "gcc -dumpversion : $(gcc -dumpversion)"
     echo "getconf LONG_BIT : $(getconf LONG_BIT)"
 
+    travis_time_start download.euslisp-debian
+    export GIT_SSL_NO_VERIFY=1
+    git clone http://salsa.debian.org/science-team/euslisp /tmp/euslisp-dfsg
+    for file in $(cat /tmp/euslisp-dfsg/debian/patches/series); do
+        # skip patch already applied by https://github.com/euslisp/EusLisp/pull/441
+        if [[ $file =~  fix-for-reprotest.patch ]]; then
+            filterdiff -p1 -x 'lisp/image/jpeg/makefile' -x 'lisp/comp/comp.l' < /tmp/euslisp-dfsg/debian/patches/$file > /tmp/euslisp-dfsg/debian/patches/$file-fix
+            file=$file-fix
+        fi
+        echo $file
+        patch -p1 < /tmp/euslisp-dfsg/debian/patches/$file
+    done
+    travis_time_end
+
     travis_time_start compile.euslisp
     export EUSDIR=`pwd`
     eval "$(dpkg-buildflags --export=sh)"
-    make -C lisp -f Makefile.Linux  eus0 eus1 eus2 eusg eusx eusgl eus eusjpeg
+    make
     travis_time_end
 
     if [[ `gcc -dumpmachine | egrep "^(arm|aarch)"` != "" ]]; then
@@ -87,7 +103,10 @@ if [ "$QEMU" != "" ]; then
     export EXIT_STATUS=0;
     set +e
     # run test in EusLisp/test
+    make -C test
     for test_l in test/*.l; do
+
+        [[ "`uname -m`" == "ppc64le"* && $test_l =~ test-foreign.l ]] && continue;
 
         travis_time_start euslisp.${test_l##*/}.test
 
@@ -96,7 +115,31 @@ if [ "$QEMU" != "" ]; then
         eusgl $test_l;
         export TMP_EXIT_STATUS=$?
 
-        travis_time_end `expr 32 - $TMP_EXIT_STATUS`
+        export CONTINUE=0
+        # test-foreign.l only works for x86 / arm
+        if [[ $test_l =~ test-foreign.l  && ! "$(gcc -dumpmachine)" =~ "aarch".*|"arm".*|"x86_64".*|"i"[0-9]"86".* ]]; then export CONTINUE=1; fi
+
+        if [[ $CONTINUE == 0 ]]; then travis_time_end `expr 32 - $TMP_EXIT_STATUS`; else travis_time_end 33; fi
+
+        if [[ $TMP_EXIT_STATUS != 0 ]]; then echo "Failed running $test_l. Exiting with $TMP_EXIT_STATUS"; fi
+
+        if [[ $CONTINUE != 0 ]]; then export TMP_EXIT_STATUS=0; fi
+
+        export EXIT_STATUS=`expr $TMP_EXIT_STATUS + $EXIT_STATUS`;
+
+        travis_time_start compiled.${test_l##*/}.test
+
+        eusgl "(let ((o (namestring (merge-pathnames \".o\" \"$test_l\"))) (so (namestring (merge-pathnames \".so\" \"$test_l\")))) (compile-file \"$test_l\" :o o) (if (probe-file so) (load so) (exit 1))))"
+        export TMP_EXIT_STATUS=$?
+
+        # const.l does not compilable https://github.com/euslisp/EusLisp/issues/318
+        if [[ $test_l =~ const.l ]]; then export CONTINUE=1; fi
+
+        if [[ $CONTINUE == 0 ]]; then travis_time_end `expr 32 - $TMP_EXIT_STATUS`; else travis_time_end 33; fi
+
+        if [[ $TMP_EXIT_STATUS != 0 ]]; then echo "Failed running $test_l. Exiting with $TMP_EXIT_STATUS"; fi
+
+        if [[ $CONTINUE != 0 ]]; then continue; fi
 
         export EXIT_STATUS=`expr $TMP_EXIT_STATUS + $EXIT_STATUS`;
     done;
@@ -129,14 +172,17 @@ if [[ "$DOCKER_IMAGE" == *"trusty"* || "$DOCKER_IMAGE" == *"jessie"* ]]; then
 else
     make eus-installed WFLAGS="-Werror=implicit-int -Werror=implicit-function-declaration -Werror=incompatible-pointer-types -Werror=int-conversion -Werror=unused-result"
 fi
+travis_time_end
+
+travis_time_start script.make.jskeus
+
 make
+
+travis_time_end
 
 travis_time_start script.eustag
 
 (cd eus/lisp/tool; make)
-
-travis_time_end
-
 
 travis_time_end
 
@@ -206,12 +252,23 @@ export DISPLAY=
 export EXIT_STATUS=0;
 set +e
 
+set -x # enable debug information
 # arm target (ubuntu_arm64/trusty) takes too long time (>50min) for test
-if [[ "`uname -m`" == "aarch"* ]]; then
-    sed -i 's@00000@0000@' $CI_SOURCE_PATH/test/object.l $CI_SOURCE_PATH/test/coords.l
+# osrf/ubuntu_arm64:trusty takes >50 min, reduce loop count for irteus-demo.l
+if [[ "$DOCKER_IMAGE" == *"arm"* ]]; then
+    sed -i 's@00000@0@' $CI_SOURCE_PATH/test/object.l $CI_SOURCE_PATH/test/coords.l
+    sed -i 's@do-until-key-counter 10@do-until-key-counter 1@' irteus/test/irteus-demo.l;
+    sed -i 's/h7/ape/' irteus/test/test-cad.l
+    sed -i 's/(hanoi-program (length \*disks\*))/(subseq (hanoi-program (length \*disks\*)) 0 2)/' irteus/demo/hanoi-arm.l
+    sed -i 's/^\s*footstep-list/(subseq footstep-list 0 3)/' irteus/demo/walk-motion.l
 fi
+set +x # disable debug information
 
     # run test in EusLisp/test
+    travis_time_start script.make.test
+    make -C $CI_SOURCE_PATH/test
+    travis_time_end
+
     for test_l in $CI_SOURCE_PATH/test/*.l; do
 
         travis_time_start euslisp.${test_l##*/}.test
@@ -237,10 +294,6 @@ fi
         export TMP_EXIT_STATUS=$?
 
         export CONTINUE=0
-        # bignum test fails on armhf
-        if [[ "`uname -m`" == "arm"* && $test_l =~ bignum.l ]]; then export CONTINUE=1; fi
-        # sort test fails on armhf  (https://github.com/euslisp/EusLisp/issues/232)
-        if [[ "`uname -m`" == "arm"* && $test_l =~ sort.l ]]; then export CONTINUE=1; fi
         # const.l does not compilable https://github.com/euslisp/EusLisp/issues/318
         if [[ $test_l =~ const.l ]]; then export CONTINUE=1; fi
 
@@ -263,8 +316,6 @@ fi
         export TMP_EXIT_STATUS=$?
 
         export CONTINUE=0
-        # irteus-demo.l, robot-model-usage.l and test-irt-motion.l fails on armhf both trusty and xenial
-        if [[ "`uname -m`" == "arm"* && $test_l =~ irteus-demo.l|robot-model-usage.l|test-irt-motion.l ]]; then export CONTINUE=1; fi
         # skip collision test because bullet of 2.83 or later version is not released in trusty and jessie.
         # https://github.com/euslisp/jskeus/blob/6cb08aa6c66fa8759591de25b7da68baf76d5f09/irteus/Makefile#L37
         if [[ ( "$DOCKER_IMAGE" == *"trusty"* || "$DOCKER_IMAGE" == *"jessie"* ) && $test_l =~ test-collision.l ]]; then export CONTINUE=1; fi
@@ -281,15 +332,6 @@ fi
 
 
 [ $EXIT_STATUS == 0 ] || exit 1
-
-travis_time_start eus64.test
-
-if [[ "$TRAVIS_OS_NAME" == "osx" || "`uname -m`" == "arm"* ]]; then
-    uname -a
-else
-    make -C eus/contrib/eus64-check/ || exit 1 # check eus64-check
-fi
-travis_time_end
 
 if [ "$TRAVIS_OS_NAME" == "linux" -a "`uname -m`" == "x86_64" ]; then
 
