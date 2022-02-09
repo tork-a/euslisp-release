@@ -1,3 +1,26 @@
+## euslisp (noetic) - 9.29.9-1
+
+The packages in the `euslisp` repository were released into the `noetic` distro by running `/usr/bin/bloom-release euslisp --track noetic --rosdistro noetic` on `Wed, 09 Feb 2022 07:40:49 -0000`
+
+The `euslisp` package was released.
+
+Version of package(s) in repository `euslisp`:
+
+- upstream repository: https://github.com/euslisp/EusLisp
+- release repository: https://github.com/tork-a/euslisp-release.git
+- rosdistro version: `9.28.0-1`
+- old version: `9.28.0-1`
+- new version: `9.29.9-1`
+
+Versions of tools used:
+
+- bloom version: `0.10.7`
+- catkin_pkg version: `0.4.24`
+- rosdep version: `0.21.0`
+- rosdistro version: `0.8.3`
+- vcstools version: `0.1.42`
+
+
 ## euslisp (noetic) - 9.28.0-1
 
 The packages in the `euslisp` repository were released into the `noetic` distro by running `/usr/bin/bloom-release euslisp --track noetic --rosdistro noetic` on `Sun, 14 Nov 2021 02:43:23 -0000`
