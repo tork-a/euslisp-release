@@ -160,7 +160,7 @@ tracks:
       :{release_inc} --os-name rhel
     devel_branch: null
     last_release: EusLisp-9.29
-    last_version: 9.29.9
+    last_version: 9.29.0
     name: upstream
     patches: patches
     release_inc: '1'
