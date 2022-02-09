@@ -113,7 +113,7 @@ register context *ctx;
       addr= addr>>2;
       mod->c.ldmod.entry=makeint(addr);
 #if ARM
-      mod->c.ldmod.entry2=makeint((eusinteger_t)initfunc);
+      mod->c.ldmod.entry2=makeint(((eusinteger_t)initfunc)&0x3);
 #endif
       mod->c.ldmod.subrtype=SUBR_ENTRY;
       (*initfunc)(ctx,1, &mod); }
@@ -160,7 +160,7 @@ pointer initnames;
   void *dlhandle;
   char namebuf[256];
 
-  dlhandle=dlopen(0,RTLD_LAZY);
+  dlhandle=dlopen(0,RTLD_LAZY|RTLD_GLOBAL);
   if (dlhandle==NULL) { 
     fprintf(stderr, "cannot dlopen self\n"); exit(2);}
   module_count=0;
@@ -180,7 +180,7 @@ pointer initnames;
       mod->c.ldmod.codevec=makeint(0);
       mod->c.ldmod.entry=makeint(addr);
 #if ARM
-      mod->c.ldmod.entry2=makeint((eusinteger_t)initfunc);
+      mod->c.ldmod.entry2=makeint(((eusinteger_t)initfunc)&0x3);
 #endif
       mod->c.ldmod.subrtype=SUBR_FUNCTION;
       p=cons(ctx,mod, NIL);
@@ -231,7 +231,7 @@ pointer *argv;
       mod->c.ldmod.codevec=makeint(0);
       mod->c.ldmod.entry=makeint(addr);
 #if ARM
-      mod->c.ldmod.entry2=makeint((eusinteger_t)initfunc);
+      mod->c.ldmod.entry2=makeint(((eusinteger_t)initfunc)&0x3);
 #endif
       mod->c.ldmod.subrtype=SUBR_FUNCTION;
       p=cons(ctx,mod, NIL);
@@ -386,7 +386,7 @@ pointer *argv;
     else entry=(char *)get_string(argv[1]);}
   else entry=NULL;
 
-  dlhandle=(eusinteger_t)dlopen(binfn, RTLD_LAZY);/* ???? */
+  dlhandle=(eusinteger_t)dlopen(binfn, RTLD_LAZY|RTLD_GLOBAL);/* ???? */
   if (dlhandle == 0) {
     fprintf(stderr,"BINLOAD cannot dlopen: %s\n", dlerror());
     return(NIL);}
@@ -409,7 +409,7 @@ pointer *argv;
     mod->c.ldmod.codevec=makeint(0);
     mod->c.ldmod.entry=makeint(addr);
 #if ARM
-    mod->c.ldmod.entry2=makeint((eusinteger_t)initfunc);
+    mod->c.ldmod.entry2=makeint(((eusinteger_t)initfunc)&0x3);
 #endif
     mod->c.ldmod.subrtype=SUBR_FUNCTION;
     (*initfunc)(ctx, 1, &mod); }

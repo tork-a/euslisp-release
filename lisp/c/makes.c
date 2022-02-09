@@ -292,7 +292,7 @@ pointer (*f)();
   fentaddr= (eusinteger_t)f>>2;
   cd->c.code.entry=makeint(fentaddr);
 #if ARM
-  cd->c.code.entry2=makeint((eusinteger_t)f);
+  cd->c.code.entry2=makeint(((eusinteger_t)f)&0x3);
 #endif
   return(cd);}
 
@@ -513,7 +513,7 @@ pointer (*f)();
   clo->c.clo.subrtype=SUBR_FUNCTION;
   clo->c.clo.entry=makeint((eusinteger_t)f>>2);
 #if ARM
-  clo->c.clo.entry2=makeint((eusinteger_t)f);
+  clo->c.clo.entry2=makeint(((eusinteger_t)f)&0x3);
 #endif
   clo->c.clo.env0=e0;
   clo->c.clo.env1=e1; /*makeint((int)e1>>2);*/
@@ -785,7 +785,7 @@ pointer nm,def;
 struct fletframe *scp,*link;
 { register struct fletframe *ffp=(struct fletframe *)(ctx->vsp);
   register pointer p;
-  int i;
+  size_t i;
   for (i=0; i<sizeof(struct fletframe)/sizeof(pointer); i++)
     vpush(makeint(0));
   ffp->name=nm;
