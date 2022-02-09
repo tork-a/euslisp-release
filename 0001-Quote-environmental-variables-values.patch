@@ -1,0 +1,26 @@
+From 259e69f35de6f6616a99be43177dd3020046474f Mon Sep 17 00:00:00 2001
+From: Yuki Furuta <me@furushchev.ru>
+Date: Wed, 7 Apr 2021 03:33:50 +0900
+Subject: [PATCH 1/4] Quote environmental variables values
+
+Without quoting the paths, It can occur word splitting issue.
+https://github.com/koalaman/shellcheck/wiki/SC2086
+---
+ env-hooks/99.euslisp.sh.in | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/env-hooks/99.euslisp.sh.in b/env-hooks/99.euslisp.sh.in
+index c8dcd935..1dece3f4 100644
+--- a/env-hooks/99.euslisp.sh.in
++++ b/env-hooks/99.euslisp.sh.in
+@@ -1,5 +1,4 @@
+ export ARCHDIR=@ARCHDIR@
+ export EUSDIR="@CMAKE_INSTALL_PREFIX@/share/euslisp/jskeus/eus/"
+-export LD_LIBRARY_PATH=$EUSDIR/$ARCHDIR/lib:$LD_LIBRARY_PATH
+-export PATH=$EUSDIR/$ARCHDIR/bin:$PATH
+-
++export LD_LIBRARY_PATH="$EUSDIR/$ARCHDIR/lib:$LD_LIBRARY_PATH"
++export PATH="$EUSDIR/$ARCHDIR/bin:$PATH"
+-- 
+2.17.1
+

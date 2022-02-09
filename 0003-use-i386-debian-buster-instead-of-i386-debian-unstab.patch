@@ -1,0 +1,25 @@
+From 2025b805195570500cbd3fbb1e805be43c3faf8a Mon Sep 17 00:00:00 2001
+From: Kei Okada <k-okada@jsk.t.u-tokyo.ac.jp>
+Date: Tue, 31 Aug 2021 20:53:08 +0900
+Subject: [PATCH 3/4] use i386/debian:buster instead of i386/debian:unstable
+
+---
+ .travis.yml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/.travis.yml b/.travis.yml
+index 699fab00..c6e38506 100644
+--- a/.travis.yml
++++ b/.travis.yml
+@@ -24,7 +24,7 @@ matrix:
+     - env: QEMU=arm DOCKER_IMAGE=arm32v7/debian:jessie # armhf
+     # hppa
+     # hurd-i386
+-    - env: QEMU=i386 DOCKER_IMAGE=i386/debian:unstable # i386
++    - env: QEMU=i386 DOCKER_IMAGE=i386/debian:buster # i386
+     # ia64
+     # m68k
+     - env: QEMU=mips64el DOCKER_IMAGE=loongnix/debian:buster # mips64el
+-- 
+2.17.1
+
