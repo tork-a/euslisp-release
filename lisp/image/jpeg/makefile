@@ -1,14 +1,7 @@
 # jpeg compression/decompression for euslisp
 # copyright (c) 1997, Toshihiro Matsui, Electrotechnical Laboratory
 
-ifeq ($(shell gcc -dumpmachine | sed 's/.*-\(.*\)-.*/\1/'), linux)
-  OS=Linux
-else ifeq ($(shell gcc -dumpmachine | sed 's/.*-.*-\([a-zA-Z]*\).*/\1/'), darwin)
-  OS=Darwin
-else ifeq ($(shell gcc -dumpmachine | sed 's/.*-.*-\(.*\)/\1/'), cygwin)
-  OS=Cygwin
-endif
-endif
+OS = $(shell uname | sed s/-.*//)
 ifeq ($(OS), Linux)
  LSFX = so
 else
@@ -25,7 +18,7 @@ else
  LD = gcc -dynamiclib
 endif
 
-ifeq ($(shell gcc -dumpmachine | sed 's/\(.*\)-.*-.*/\1/'), x86_64)
+ifeq ($(shell uname -m), x86_64)
 ifneq ($(ARCHDIR), Linux64)
 ifneq ($(ARCHDIR), Darwin)
 CC += -m32
