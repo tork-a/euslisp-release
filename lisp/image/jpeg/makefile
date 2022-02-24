@@ -17,7 +17,6 @@ ifeq ($(OS), Darwin)
 else
  LSFX = dll
 endif
-endif
 
 ifneq ($(OS), Darwin)
  LD = gcc -shared 
