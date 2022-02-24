@@ -1,7 +1,7 @@
-From ceb3751a2585701113c0e822601ba7756a2c1444 Mon Sep 17 00:00:00 2001
+From cd539fc18d2442d16f8b9fbc7063433632a5c687 Mon Sep 17 00:00:00 2001
 From: Kei Okada <k-okada@jsk.t.u-tokyo.ac.jp>
 Date: Thu, 24 Feb 2022 21:20:37 +0900
-Subject: [PATCH 3/3] use gcc -dumpspec, closes
+Subject: [PATCH 3/4] use gcc -dumpspec, closes
  https://github.com/euslisp/EusLisp/issues/485
 
 ---

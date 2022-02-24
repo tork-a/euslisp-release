@@ -1,7 +1,7 @@
-From c7e74387f9eeb0869223a5a092d4a4ac0d2bd31f Mon Sep 17 00:00:00 2001
+From 9d609404ac9db55903c0e4e479c37f74e5e72050 Mon Sep 17 00:00:00 2001
 From: Kei Okada <k-okada@jsk.t.u-tokyo.ac.jp>
 Date: Tue, 31 Aug 2021 21:24:22 +0900
-Subject: [PATCH 2/3] skip test-collision.l/test-cad.l/graph.l for armhf
+Subject: [PATCH 2/4] skip test-collision.l/test-cad.l/graph.l for armhf
 
 ---
  .travis.sh | 4 ++++

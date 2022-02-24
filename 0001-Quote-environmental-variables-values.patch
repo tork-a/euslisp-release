@@ -1,7 +1,7 @@
-From fce2b9394daf96e5269b38a2d18969fa96ac5f63 Mon Sep 17 00:00:00 2001
+From 09bf2c6afdeb8e975cde01cd959065d05c27cdd2 Mon Sep 17 00:00:00 2001
 From: Yuki Furuta <me@furushchev.ru>
 Date: Wed, 7 Apr 2021 03:33:50 +0900
-Subject: [PATCH 1/3] Quote environmental variables values
+Subject: [PATCH 1/4] Quote environmental variables values
 
 Without quoting the paths, It can occur word splitting issue.
 https://github.com/koalaman/shellcheck/wiki/SC2086

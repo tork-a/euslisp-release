@@ -1,0 +1,24 @@
+From 5c0543b391875c2bbf4701d30aa781e99b4d79d4 Mon Sep 17 00:00:00 2001
+From: Kei Okada <k-okada@jsk.t.u-tokyo.ac.jp>
+Date: Thu, 24 Feb 2022 22:48:11 +0900
+Subject: [PATCH 4/4] fix syntax erron lisp/image/jpeg/makefile
+
+---
+ lisp/image/jpeg/makefile | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/lisp/image/jpeg/makefile b/lisp/image/jpeg/makefile
+index a4674ba3..bc2a8988 100644
+--- a/lisp/image/jpeg/makefile
++++ b/lisp/image/jpeg/makefile
+@@ -17,7 +17,6 @@ ifeq ($(OS), Darwin)
+ else
+  LSFX = dll
+ endif
+-endif
+ 
+ ifneq ($(OS), Darwin)
+  LD = gcc -shared 
+-- 
+2.17.1
+
