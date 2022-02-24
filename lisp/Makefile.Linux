@@ -57,17 +57,23 @@ endif
 GCC_MACHINE=$(shell gcc -dumpmachine)
 $(info "-- GCC_MACHINE = ${GCC_MACHINE}")
 ifneq ($(GCC_MACHINE),)
- ifeq ($(GCC_MACHINE),x86_64-linux-gnu)
+ ifneq (,$(findstring x86_64-linux-gnu,$(GCC_MACHINE)))
    MACHINE=x86_64
  endif
- ifeq ($(GCC_MACHINE),i686-linux-gnu)
-   MACHINE=x86
+ ifneq (,$(findstring i686-linux-gnu,$(GCC_MACHINE)))
+   MACHINE=i686
  endif
- ifeq ($(GCC_MACHINE),aarch64-linux-gnu)
+ ifneq (,$(findstring aarch64-linux-gnu,$(GCC_MACHINE)))
    MACHINE=aarch64
  endif
- ifeq ($(GCC_MACHINE),arm-linux-gnueabihf)
+ ifneq (,$(findstring arm-linux-gnu,$(GCC_MACHINE)))
    MACHINE=arm
+ endif
+ ifneq (,$(findstring powerpc64le-linux-gnu,$(GCC_MACHINE)))
+   MACHINE=ppc64le
+ endif
+ ifneq (,$(findstring mips64el-linux-gnu,$(GCC_MACHINE)))
+   MACHINE=mips64
  endif
 endif
 # need to set 'i486', for conditionals in c/*.[ch].
