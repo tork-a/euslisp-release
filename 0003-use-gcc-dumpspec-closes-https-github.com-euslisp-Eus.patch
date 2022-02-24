@@ -1,0 +1,119 @@
+From ceb3751a2585701113c0e822601ba7756a2c1444 Mon Sep 17 00:00:00 2001
+From: Kei Okada <k-okada@jsk.t.u-tokyo.ac.jp>
+Date: Thu, 24 Feb 2022 21:20:37 +0900
+Subject: [PATCH 3/3] use gcc -dumpspec, closes
+ https://github.com/euslisp/EusLisp/issues/485
+
+---
+ lisp/Makefile.Linux        | 17 ++++++++++++++++-
+ lisp/Makefile.Linux.thread |  2 +-
+ lisp/Makefile.LinuxARM     |  3 ++-
+ lisp/image/jpeg/makefile   | 11 +++++++++--
+ test/Makefile              |  8 +++++++-
+ 5 files changed, 35 insertions(+), 6 deletions(-)
+
+diff --git a/lisp/Makefile.Linux b/lisp/Makefile.Linux
+index 5c564816..24cc2f84 100644
+--- a/lisp/Makefile.Linux
++++ b/lisp/Makefile.Linux
+@@ -54,7 +54,22 @@ ADD_LDFLAGS += -Wl,--no-as-needed
+ endif
+ 
+ # set CPU arch with -D
+-MACHINE=$(shell uname -m)
++GCC_MACHINE=$(shell gcc -dumpmachine)
++$(info "-- GCC_MACHINE = ${GCC_MACHINE}")
++ifneq ($(GCC_MACHINE),)
++ ifeq ($(GCC_MACHINE),x86_64-linux-gnu)
++   MACHINE=x86_64
++ endif
++ ifeq ($(GCC_MACHINE),i686-linux-gnu)
++   MACHINE=x86
++ endif
++ ifeq ($(GCC_MACHINE),aarch64-linux-gnu)
++   MACHINE=aarch64
++ endif
++ ifeq ($(GCC_MACHINE),arm-linux-gnueabihf)
++   MACHINE=arm
++ endif
++endif
+ # need to set 'i486', for conditionals in c/*.[ch].
+ ifneq ($(shell gcc -dumpmachine | grep "i.*86-linux"),)
+   MACHINE=i486
+diff --git a/lisp/Makefile.Linux.thread b/lisp/Makefile.Linux.thread
+index 913b67b6..2e0fd806 100644
+--- a/lisp/Makefile.Linux.thread
++++ b/lisp/Makefile.Linux.thread
+@@ -91,7 +91,7 @@ GLLIB= -L$(ADLIBDIR) -lGLU -lGL -lXext -leusgl
+ THREADDEP=mthread_posix.c
+ #THREADDEP=pthreads.c
+ 
+-ifeq ($(shell /bin/uname -m), x86_64)
++ifeq ($(shell gcc -dumpmachine | sed 's/\(.*\)-.*-.*/\1/'), x86_64)
+ CC += -m32 -DUSE_MULTI_LIB
+ LD += -melf_i386
+ endif
+diff --git a/lisp/Makefile.LinuxARM b/lisp/Makefile.LinuxARM
+index 4b2683d1..e49262b3 100644
+--- a/lisp/Makefile.LinuxARM
++++ b/lisp/Makefile.LinuxARM
+@@ -36,7 +36,8 @@ XVERSION=X_V11R6_1
+ 
+ #MACHINE=armv6
+ #MACHINE=armv5te
+-MACHINE=$(shell uname -m | sed 's/\(armv[0-9]\).*/\1/')
++# gcc -dumpmachine retruns target triplet consists of three fields separated by a hyphen (-).
++MACHINE=$(shell gcc -dumpmachine | sed 's/\(.*\)-.*-.*/\1/')
+ 
+ GCC_MAJOR_VERSION=$(shell gcc -dumpversion | sed -e 's/\([0-9]\)\.\([0-9]\)\([\.0-9]*\)/\1/')
+ GCC_MINOR_VERSION=$(shell gcc -dumpversion | sed -e 's/\([0-9]\)\.\([0-9]\)\([\.0-9]*\)/\2/')
+diff --git a/lisp/image/jpeg/makefile b/lisp/image/jpeg/makefile
+index cd55d2fc..a4674ba3 100644
+--- a/lisp/image/jpeg/makefile
++++ b/lisp/image/jpeg/makefile
+@@ -1,7 +1,14 @@
+ # jpeg compression/decompression for euslisp
+ # copyright (c) 1997, Toshihiro Matsui, Electrotechnical Laboratory
+ 
+-OS = $(shell uname | sed s/-.*//)
++ifeq ($(shell gcc -dumpmachine | sed 's/.*-\(.*\)-.*/\1/'), linux)
++  OS=Linux
++else ifeq ($(shell gcc -dumpmachine | sed 's/.*-.*-\([a-zA-Z]*\).*/\1/'), darwin)
++  OS=Darwin
++else ifeq ($(shell gcc -dumpmachine | sed 's/.*-.*-\(.*\)/\1/'), cygwin)
++  OS=Cygwin
++endif
++endif
+ ifeq ($(OS), Linux)
+  LSFX = so
+ else
+@@ -18,7 +25,7 @@ else
+  LD = gcc -dynamiclib
+ endif
+ 
+-ifeq ($(shell uname -m), x86_64)
++ifeq ($(shell gcc -dumpmachine | sed 's/\(.*\)-.*-.*/\1/'), x86_64)
+ ifneq ($(ARCHDIR), Linux64)
+ ifneq ($(ARCHDIR), Darwin)
+ CC += -m32
+diff --git a/test/Makefile b/test/Makefile
+index 1fa5e144..c7ecb607 100644
+--- a/test/Makefile
++++ b/test/Makefile
+@@ -1,6 +1,12 @@
+ GCC_MACHINE=$(shell gcc -dumpmachine)
+ $(info "-- GCC_MACHINE = ${GCC_MACHINE}")
+-OS=$(shell uname -s | sed 's/[^A-Za-z1-9].*//')
++ifeq ($(shell echo $(GCC_MACHINE) | sed 's/.*-\(.*\)-.*/\1/'), linux)
++  OS=Linux
++else ifeq ($(shell echo $(GCC_MACHINE) | sed 's/.*-.*-\([a-zA-Z]*\).*/\1/'), darwin)
++  OS=Darwin
++else ifeq ($(shell echo $(GCC_MACHINE) | sed 's/.*-.*-\(.*\)/\1/'), cygwin)
++  OS=Cygwin
++endif
+ $(info "--      OS = ${OS}")
+ ifeq ($(OS),Linux)
+  export MAKEFILE=Makefile.Linux
+-- 
+2.17.1
+
