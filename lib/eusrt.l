@@ -44,6 +44,11 @@
 (in-package "X")
 ;; (shadow 'gc)
 ;; initilize Xlib interface
+
+;; FIXME: run (InitThreads) cause segfault on armhf https://github.com/euslisp/EusLisp/issues/485#issuecomment-1051010975
+#+:(and :arm :word-size=32)
+(delete :x11r6.1 *features*)
+
 (when (and 
        (or (substringp "sx" (pathname-name *program-name*)) (substringp "gl" (pathname-name *program-name*)))
 	(sys::exec-module-init "xforeign" "xwindow/loadx.l")
