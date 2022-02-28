@@ -330,10 +330,6 @@ set +x # disable debug information
         # skip collision test because bullet of 2.83 or later version is not released in trusty and jessie.
         # https://github.com/euslisp/jskeus/blob/6cb08aa6c66fa8759591de25b7da68baf76d5f09/irteus/Makefile#L37
         if [[ ( "$DOCKER_IMAGE" == *"trusty"* || "$DOCKER_IMAGE" == *"jessie"* ) && $test_l =~ test-collision.l ]]; then export CONTINUE=1; fi
-
-        # skip if test-cad.l/graph.l for arm
-        if [[ "$DOCKER_IMAGE" == *"arm"* && $test_l =~ test-collision.l|test-cad.l|graph.l ]]; then export CONTINUE=1; fi
-
 	# aarch64:bionic and aarch64:focal start failing from https://github.com/euslisp/EusLisp/pull/481. Can not fix this after 2 week debugging....
         if [[ ( "$DOCKER_IMAGE" == "osrf/ubuntu_arm64:bionic" || "$DOCKER_IMAGE" == "osrf/ubuntu_arm64:focal" ) ]]; then export CONTINUE=1; fi
 
