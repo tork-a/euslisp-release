@@ -8,11 +8,9 @@ else ifeq ($(shell gcc -dumpmachine | sed 's/.*-.*-\([a-zA-Z]*\).*/\1/'), darwin
 else ifeq ($(shell gcc -dumpmachine | sed 's/.*-.*-\(.*\)/\1/'), cygwin)
   OS=Cygwin
 endif
-endif
 ifeq ($(OS), Linux)
  LSFX = so
-else
-ifeq ($(OS), Darwin)
+else ifeq ($(OS), Darwin)
  LSFX = so
 else
  LSFX = dll
