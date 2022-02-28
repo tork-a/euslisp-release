@@ -1,7 +1,7 @@
-From 9c1991dd452d27fe8abc4cdd73cae2b98e3af9bc Mon Sep 17 00:00:00 2001
+From 171ee020d0a594349ce10648ca984cce72762c79 Mon Sep 17 00:00:00 2001
 From: Kei Okada <k-okada@jsk.t.u-tokyo.ac.jp>
 Date: Thu, 24 Feb 2022 22:48:11 +0900
-Subject: [PATCH 4/5] fix syntax erron lisp/image/jpeg/makefile
+Subject: [PATCH 4/6] fix syntax erron lisp/image/jpeg/makefile
 
 ---
  lisp/image/jpeg/makefile | 1 -

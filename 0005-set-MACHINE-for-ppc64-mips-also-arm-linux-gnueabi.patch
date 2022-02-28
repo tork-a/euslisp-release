@@ -1,7 +1,7 @@
-From 036b83d7c5c2ed1fc71fc3bc0cb8946c59e67e0d Mon Sep 17 00:00:00 2001
+From ffc9b0f2c37550a5d97696bd705a02e2d4f2efbb Mon Sep 17 00:00:00 2001
 From: Kei Okada <k-okada@jsk.t.u-tokyo.ac.jp>
 Date: Thu, 24 Feb 2022 23:13:40 +0900
-Subject: [PATCH 5/5] set MACHINE for ppc64/mips, also arm-linux-gnueabi
+Subject: [PATCH 5/6] set MACHINE for ppc64/mips, also arm-linux-gnueabi
 
 ---
  lisp/Makefile.Linux | 16 +++++++++++-----
