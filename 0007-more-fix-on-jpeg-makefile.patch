@@ -1,0 +1,29 @@
+From dfebe568e9bd85479268922777cbd6a8c31f7c22 Mon Sep 17 00:00:00 2001
+From: Kei Okada <k-okada@jsk.t.u-tokyo.ac.jp>
+Date: Tue, 1 Mar 2022 01:25:31 +0900
+Subject: [PATCH 7/7] more fix on jpeg/makefile
+
+---
+ lisp/image/jpeg/makefile | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/lisp/image/jpeg/makefile b/lisp/image/jpeg/makefile
+index bc2a8988..223f9055 100644
+--- a/lisp/image/jpeg/makefile
++++ b/lisp/image/jpeg/makefile
+@@ -8,11 +8,9 @@ else ifeq ($(shell gcc -dumpmachine | sed 's/.*-.*-\([a-zA-Z]*\).*/\1/'), darwin
+ else ifeq ($(shell gcc -dumpmachine | sed 's/.*-.*-\(.*\)/\1/'), cygwin)
+   OS=Cygwin
+ endif
+-endif
+ ifeq ($(OS), Linux)
+  LSFX = so
+-else
+-ifeq ($(OS), Darwin)
++else ifeq ($(OS), Darwin)
+  LSFX = so
+ else
+  LSFX = dll
+-- 
+2.17.1
+

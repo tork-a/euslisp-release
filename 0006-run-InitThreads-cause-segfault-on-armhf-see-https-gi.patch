@@ -1,7 +1,7 @@
-From 6628bbfa7b647bd9820d2bcc57cfe6f5d7e99a73 Mon Sep 17 00:00:00 2001
+From dea8374997f5444729e43165a9aefd6bff9a5fd3 Mon Sep 17 00:00:00 2001
 From: Kei Okada <k-okada@jsk.t.u-tokyo.ac.jp>
 Date: Mon, 28 Feb 2022 20:38:14 +0900
-Subject: [PATCH 6/6] run (InitThreads) cause segfault on armhf, see
+Subject: [PATCH 6/7] run (InitThreads) cause segfault on armhf, see
  https://github.com/euslisp/EusLisp/issues/485#issuecomment-1051010975
 
 ---
