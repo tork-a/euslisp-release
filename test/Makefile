@@ -1,12 +1,6 @@
 GCC_MACHINE=$(shell gcc -dumpmachine)
 $(info "-- GCC_MACHINE = ${GCC_MACHINE}")
-ifeq ($(shell echo $(GCC_MACHINE) | sed 's/.*-\(.*\)-.*/\1/'), linux)
-  OS=Linux
-else ifeq ($(shell echo $(GCC_MACHINE) | sed 's/.*-.*-\([a-zA-Z]*\).*/\1/'), darwin)
-  OS=Darwin
-else ifeq ($(shell echo $(GCC_MACHINE) | sed 's/.*-.*-\(.*\)/\1/'), cygwin)
-  OS=Cygwin
-endif
+OS=$(shell uname -s | sed 's/[^A-Za-z1-9].*//')
 $(info "--      OS = ${OS}")
 ifeq ($(OS),Linux)
  export MAKEFILE=Makefile.Linux
