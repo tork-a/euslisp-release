@@ -34,11 +34,11 @@ execute_process(COMMAND ${CMAKE_MAKE_PROGRAM} -C ${PROJECT_SOURCE_DIR}/lisp -f $
 #
 set(EUSLISP_WITHOUT_DISPLAY FALSE CACHE BOOL "Set TRUE if you compile only eus0,eus1,eus2,eusg")
 if(${EUSLISP_WITHOUT_DISPLAY})
-  set(EUSLISP_TARGET eus0 eus1 eus2 eusg)
+  set(EUSLISP_TARGET EUSLISP_WITHOUT_DISPLAY=1)
 else()
-  set(EUSLISP_TARGET all)
+  set(EUSLISP_TARGET)
 endif()
-message(STATUS "Compile euslisp with ${EUSLISP_TARGET}")
+message(STATUS "Compile euslisp with '${EUSLISP_TARGET}'")
 
 # build euslisp
 add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/lisp/Makefile
@@ -52,7 +52,7 @@ add_custom_target(install_euslisp
   COMMAND export EUSDIR=${PROJECT_SOURCE_DIR} lt_cv_sys_lib_dlsearch_path_spec=${lt_cv_sys_lib_dlsearch_path_spec} LD_LIBRARY_PATH=${PROJECT_SOURCE_DIR}/${ARCHDIR}/lib:\$LD_LIBRARY_PATH && ${CMAKE_COMMAND} -E make_directory \${DESTDIR}${CMAKE_INSTALL_PREFIX}/bin && \$\(MAKE\) -C ${PROJECT_SOURCE_DIR}/lisp -f Makefile install PUBBINDIR=\${DESTDIR}${CMAKE_INSTALL_PREFIX}/bin)
 
 add_custom_target(clean_euslisp
-  COMMAND export EUSDIR=${PROJECT_SOURCE_DIR} && \$\(MAKE\) -C ${PROJECT_SOURCE_DIR}/lisp -f Makefile clean PUBBINDIR=\${DESTDIR}${CMAKE_INSTALL_PREFIX}/bin)
+  COMMAND export EUSDIR=${PROJECT_SOURCE_DIR} && \$\(MAKE\) -C ${PROJECT_SOURCE_DIR}/lisp -f ${MAKEFILE} clean PUBBINDIR=\${DESTDIR}${CMAKE_INSTALL_PREFIX}/bin)
 
 install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} --build . --target install_euslisp)")
 install(DIRECTORY contrib lib lisp models
