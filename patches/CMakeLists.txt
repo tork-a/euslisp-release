@@ -30,7 +30,7 @@ else()
 endif()
 
 # run --force-cmake to clean all output and compile everythong
-execute_process(COMMAND ${CMAKE_MAKE_PROGRAM} -C ${PROJECT_SOURCE_DIR}/lisp -f Makefile clean PUBBINDIR=\${DESTDIR}${CMAKE_INSTALL_PREFIX}/bin EUSDIR=${PROJECT_SOURCE_DIR})
+execute_process(COMMAND ${CMAKE_MAKE_PROGRAM} -C ${PROJECT_SOURCE_DIR}/lisp -f ${MAKEFILE} clean PUBBINDIR=\${DESTDIR}${CMAKE_INSTALL_PREFIX}/bin EUSDIR=${PROJECT_SOURCE_DIR})
 #
 set(EUSLISP_WITHOUT_DISPLAY FALSE CACHE BOOL "Set TRUE if you compile only eus0,eus1,eus2,eusg")
 if(${EUSLISP_WITHOUT_DISPLAY})
