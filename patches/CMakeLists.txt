@@ -55,18 +55,24 @@ add_custom_target(clean_euslisp
   COMMAND export EUSDIR=${PROJECT_SOURCE_DIR} && \$\(MAKE\) -C ${PROJECT_SOURCE_DIR}/lisp -f ${MAKEFILE} clean PUBBINDIR=\${DESTDIR}${CMAKE_INSTALL_PREFIX}/bin)
 
 install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} --build . --target install_euslisp)")
+message("check CMAKE vesrsion : ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}")
+if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION} VERSION_GREATER "3.0")
+  set(MESSAGE_NEVER MESSAGE_NEVER)
+else()
+  set(MESSAGE_NEVER)
+endif()
 install(DIRECTORY contrib lib lisp models
   DESTINATION share/euslisp/jskeus/eus/
-  USE_SOURCE_PERMISSIONS MESSAGE_NEVER)
+  USE_SOURCE_PERMISSIONS ${MESSAGE_NEVER})
 install(DIRECTORY ${ARCHDIR}/obj
   DESTINATION share/euslisp/jskeus/eus/${ARCHDIR}/
-  USE_SOURCE_PERMISSIONS MESSAGE_NEVER)
+  USE_SOURCE_PERMISSIONS ${MESSAGE_NEVER})
 install(DIRECTORY ${ARCHDIR}/bin ${ARCHDIR}/lib
   DESTINATION share/euslisp/jskeus/eus/${ARCHDIR}
   USE_SOURCE_PERMISSIONS)
 install(DIRECTORY doc
   DESTINATION share/euslisp/jskeus/eus/
-  USE_SOURCE_PERMISSIONS MESSAGE_NEVER
+  USE_SOURCE_PERMISSIONS ${MESSAGE_NEVER}
   PATTERN "doc/html" EXCLUDE
   PATTERN "doc/mails" EXCLUDE
   PATTERN "doc/hirukawa" EXCLUDE

@@ -1,0 +1,79 @@
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  ros:
+    runs-on: ubuntu-latest
+#    continue-on-error: ${{ matrix.experimental }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - ROS_DISTRO: indigo
+            CONTAINER: ubuntu:14.04
+          - ROS_DISTRO: kinetic
+            CONTAINER: ubuntu:16.04
+          - ROS_DISTRO: melodic
+            CONTAINER: ubuntu:18.04
+          - ROS_DISTRO: noetic
+            CONTAINER: ubuntu:20.04
+
+    container: ${{ matrix.CONTAINER }}
+    steps:
+      - name: Chcekout
+        uses: actions/checkout@v2
+      - name: Setup Apt
+        run: |
+          echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+          apt-get update -qq
+          apt-get install -qq -y lsb-release wget gnupg2  # necessary for catkin-pkg to be installable
+          apt-get install -qq -y dpkg  # necessary for catkin-pkg to be installable
+          echo "Testing branch $GITHUB_REF of $GITHUB_REPOSITORY"
+          sh -c 'echo "deb http://packages.ros.org/ros-shadow-fixed/ubuntu `lsb_release -cs` main" > /etc/apt/sources.list.d/ros-latest.list'
+          wget http://packages.ros.org/ros.key -O - | apt-key add -
+          apt-get update -qq
+      - name: Install Apt (Python2)
+        if: ${{ matrix.ROS_DISTRO != 'noetic' }}
+        run: |
+          apt-get install -qq -y python-catkin-tools python-rosdep
+      - name: Install Apt (Python3)
+        if: ${{ matrix.ROS_DISTRO == 'noetic' }}
+        run: |
+          apt-get install -qq -y python3-catkin-tools python3-rosdep
+      - name: Install Apt
+        run: |
+          apt-get install -qq -y build-essential git ros-${{ matrix.ROS_DISTRO }}-rosbash ros-${{ matrix.ROS_DISTRO }}-rospack
+      - name: Setup Src
+        run: |
+          mkdir -p ~/catkin_ws/src
+          cd ~/catkin_ws/src
+          # checkout euslisp
+          git clone --depth 1 https://github.com/tork-a/euslisp-release euslisp
+          cp -r $GITHUB_WORKSPACE/patches/* euslisp/
+          wget https://raw.githubusercontent.com/tork-a/euslisp-release/release/${{ matrix.ROS_DISTRO }}/euslisp/package.xml -O euslisp/package.xml
+          # checkout jskeus
+          git clone --depth 1 https://github.com/tork-a/jskeus-release jskeus
+          wget https://raw.githubusercontent.com/tork-a/jskeus-release/release/${{ matrix.ROS_DISTRO }}/jskeus/package.xml -O jskeus/package.xml
+          wget https://raw.githubusercontent.com/tork-a/jskeus-release/master/patches/CMakeLists.txt -O jskeus/CMakeLists.txt
+          # rosdep install
+          cd ..
+          rosdep init; rosdep update; rosdep install -y -r --rosdistro ${{ matrix.ROS_DISTRO }} --from-paths src --ignore-src
+      - name: Build
+        shell: bash
+        run: |
+          source /opt/ros/${{ matrix.ROS_DISTRO }}/setup.bash
+          cd ~/catkin_ws
+          catkin build -v -i --make-args VERBOSE=1
+      - name: Test
+        shell: bash
+        run: |
+          cd ~/catkin_ws
+          ls -al devel
+          source devel/setup.bash
+          env
+          cd devel/share/euslisp
+          find jskeus/irteus/test -iname "*.l" | grep -v unittest.l | xargs -n1 irteusgl
+
