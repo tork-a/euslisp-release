@@ -76,4 +76,16 @@ jobs:
           env
           cd devel/share/euslisp
           find jskeus/irteus/test -iname "*.l" | grep -v unittest.l | xargs -n1 irteusgl
-
+      - name: Cleanup
+        shell: bash
+        run: |
+          source /opt/ros/${{ matrix.ROS_DISTRO }}/setup.bash
+          cd ~/catkin_ws
+          catkin clean --yes
+      - name: Build Install
+        shell: bash
+        run: |
+          source /opt/ros/${{ matrix.ROS_DISTRO }}/setup.bash
+          cd ~/catkin_ws
+          catkin config --install
+          catkin build -v -i --make-args VERBOSE=1
