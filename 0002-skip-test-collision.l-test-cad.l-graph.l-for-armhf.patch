@@ -1,0 +1,27 @@
+From 2c9c7b5fbbf453e22fea6ab7dea18c9f24714b15 Mon Sep 17 00:00:00 2001
+From: Kei Okada <k-okada@jsk.t.u-tokyo.ac.jp>
+Date: Tue, 31 Aug 2021 21:24:22 +0900
+Subject: [PATCH 2/7] skip test-collision.l/test-cad.l/graph.l for armhf
+
+---
+ .travis.sh | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/.travis.sh b/.travis.sh
+index c147effd..1622596f 100755
+--- a/.travis.sh
++++ b/.travis.sh
+@@ -330,6 +330,10 @@ set +x # disable debug information
+         # skip collision test because bullet of 2.83 or later version is not released in trusty and jessie.
+         # https://github.com/euslisp/jskeus/blob/6cb08aa6c66fa8759591de25b7da68baf76d5f09/irteus/Makefile#L37
+         if [[ ( "$DOCKER_IMAGE" == *"trusty"* || "$DOCKER_IMAGE" == *"jessie"* ) && $test_l =~ test-collision.l ]]; then export CONTINUE=1; fi
++
++        # skip if test-cad.l/graph.l for arm
++        if [[ "$DOCKER_IMAGE" == *"arm"* && $test_l =~ test-collision.l|test-cad.l|graph.l ]]; then export CONTINUE=1; fi
++
+ 	# aarch64:bionic and aarch64:focal start failing from https://github.com/euslisp/EusLisp/pull/481. Can not fix this after 2 week debugging....
+         if [[ ( "$DOCKER_IMAGE" == "osrf/ubuntu_arm64:bionic" || "$DOCKER_IMAGE" == "osrf/ubuntu_arm64:focal" ) ]]; then export CONTINUE=1; fi
+ 
+-- 
+2.17.1
+

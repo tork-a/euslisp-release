@@ -1,0 +1,46 @@
+From a315f5c6bfb289b15a739deddceef53951b47af7 Mon Sep 17 00:00:00 2001
+From: Kei Okada <k-okada@jsk.t.u-tokyo.ac.jp>
+Date: Thu, 24 Feb 2022 23:13:40 +0900
+Subject: [PATCH 5/7] set MACHINE for ppc64/mips, also arm-linux-gnueabi
+
+---
+ lisp/Makefile.Linux | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
+
+diff --git a/lisp/Makefile.Linux b/lisp/Makefile.Linux
+index 24cc2f84..0689d83d 100644
+--- a/lisp/Makefile.Linux
++++ b/lisp/Makefile.Linux
+@@ -57,18 +57,24 @@ endif
+ GCC_MACHINE=$(shell gcc -dumpmachine)
+ $(info "-- GCC_MACHINE = ${GCC_MACHINE}")
+ ifneq ($(GCC_MACHINE),)
+- ifeq ($(GCC_MACHINE),x86_64-linux-gnu)
++ ifneq (,$(findstring x86_64-linux-gnu,$(GCC_MACHINE)))
+    MACHINE=x86_64
+  endif
+- ifeq ($(GCC_MACHINE),i686-linux-gnu)
+-   MACHINE=x86
++ ifneq (,$(findstring i686-linux-gnu,$(GCC_MACHINE)))
++   MACHINE=i686
+  endif
+- ifeq ($(GCC_MACHINE),aarch64-linux-gnu)
++ ifneq (,$(findstring aarch64-linux-gnu,$(GCC_MACHINE)))
+    MACHINE=aarch64
+  endif
+- ifeq ($(GCC_MACHINE),arm-linux-gnueabihf)
++ ifneq (,$(findstring arm-linux-gnu,$(GCC_MACHINE)))
+    MACHINE=arm
+  endif
++ ifneq (,$(findstring powerpc64le-linux-gnu,$(GCC_MACHINE)))
++   MACHINE=ppc64le
++ endif
++ ifneq (,$(findstring mips64el-linux-gnu,$(GCC_MACHINE)))
++   MACHINE=mips64
++ endif
+ endif
+ # need to set 'i486', for conditionals in c/*.[ch].
+ ifneq ($(shell gcc -dumpmachine | grep "i.*86-linux"),)
+-- 
+2.17.1
+
