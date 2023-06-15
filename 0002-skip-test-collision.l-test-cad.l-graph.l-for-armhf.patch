@@ -1,4 +1,4 @@
-From 2c9c7b5fbbf453e22fea6ab7dea18c9f24714b15 Mon Sep 17 00:00:00 2001
+From f20b63bc2ccc68328dda391a9f4d4af3d3038be3 Mon Sep 17 00:00:00 2001
 From: Kei Okada <k-okada@jsk.t.u-tokyo.ac.jp>
 Date: Tue, 31 Aug 2021 21:24:22 +0900
 Subject: [PATCH 2/7] skip test-collision.l/test-cad.l/graph.l for armhf
@@ -23,5 +23,5 @@ index c147effd..1622596f 100755
          if [[ ( "$DOCKER_IMAGE" == "osrf/ubuntu_arm64:bionic" || "$DOCKER_IMAGE" == "osrf/ubuntu_arm64:focal" ) ]]; then export CONTINUE=1; fi
  
 -- 
-2.17.1
+2.25.1
 

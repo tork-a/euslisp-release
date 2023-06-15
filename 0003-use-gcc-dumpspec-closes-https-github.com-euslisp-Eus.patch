@@ -1,4 +1,4 @@
-From 450f7604ec80f56d4037fd82ee7118c25b915cca Mon Sep 17 00:00:00 2001
+From 4c11f98f470db2ff5344130432e04c5e4b335c26 Mon Sep 17 00:00:00 2001
 From: Kei Okada <k-okada@jsk.t.u-tokyo.ac.jp>
 Date: Thu, 24 Feb 2022 21:20:37 +0900
 Subject: [PATCH 3/7] use gcc -dumpspec, closes
@@ -115,5 +115,5 @@ index 1fa5e144..c7ecb607 100644
  ifeq ($(OS),Linux)
   export MAKEFILE=Makefile.Linux
 -- 
-2.17.1
+2.25.1
 

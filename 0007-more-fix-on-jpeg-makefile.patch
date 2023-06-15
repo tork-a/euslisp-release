@@ -1,4 +1,4 @@
-From dfebe568e9bd85479268922777cbd6a8c31f7c22 Mon Sep 17 00:00:00 2001
+From 01c52ec11a860deb02da2f477fe1a0aa30ef4b59 Mon Sep 17 00:00:00 2001
 From: Kei Okada <k-okada@jsk.t.u-tokyo.ac.jp>
 Date: Tue, 1 Mar 2022 01:25:31 +0900
 Subject: [PATCH 7/7] more fix on jpeg/makefile
@@ -25,5 +25,5 @@ index bc2a8988..223f9055 100644
  else
   LSFX = dll
 -- 
-2.17.1
+2.25.1
 

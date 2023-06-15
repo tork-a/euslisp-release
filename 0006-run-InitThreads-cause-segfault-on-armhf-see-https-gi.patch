@@ -1,4 +1,4 @@
-From dea8374997f5444729e43165a9aefd6bff9a5fd3 Mon Sep 17 00:00:00 2001
+From c3509cdaed9fe93c50eaeb9598dcabdf47cdb16f Mon Sep 17 00:00:00 2001
 From: Kei Okada <k-okada@jsk.t.u-tokyo.ac.jp>
 Date: Mon, 28 Feb 2022 20:38:14 +0900
 Subject: [PATCH 6/7] run (InitThreads) cause segfault on armhf, see
@@ -25,5 +25,5 @@ index 84155750..5bb85e97 100644
         (or (substringp "sx" (pathname-name *program-name*)) (substringp "gl" (pathname-name *program-name*)))
  	(sys::exec-module-init "xforeign" "xwindow/loadx.l")
 -- 
-2.17.1
+2.25.1
 

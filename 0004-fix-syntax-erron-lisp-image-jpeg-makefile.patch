@@ -1,4 +1,4 @@
-From 0a44bbbd47056dbfaed350b69618278c3e378f8d Mon Sep 17 00:00:00 2001
+From d0d1de60d92993d1c9b350efbc9483568306235b Mon Sep 17 00:00:00 2001
 From: Kei Okada <k-okada@jsk.t.u-tokyo.ac.jp>
 Date: Thu, 24 Feb 2022 22:48:11 +0900
 Subject: [PATCH 4/7] fix syntax erron lisp/image/jpeg/makefile
@@ -20,5 +20,5 @@ index a4674ba3..bc2a8988 100644
  ifneq ($(OS), Darwin)
   LD = gcc -shared 
 -- 
-2.17.1
+2.25.1
 

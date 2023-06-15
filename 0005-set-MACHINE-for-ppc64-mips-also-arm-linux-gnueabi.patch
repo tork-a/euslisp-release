@@ -1,4 +1,4 @@
-From a315f5c6bfb289b15a739deddceef53951b47af7 Mon Sep 17 00:00:00 2001
+From 0e7784abc66b2eb97d191975935c1fd02cc23ab9 Mon Sep 17 00:00:00 2001
 From: Kei Okada <k-okada@jsk.t.u-tokyo.ac.jp>
 Date: Thu, 24 Feb 2022 23:13:40 +0900
 Subject: [PATCH 5/7] set MACHINE for ppc64/mips, also arm-linux-gnueabi
@@ -42,5 +42,5 @@ index 24cc2f84..0689d83d 100644
  # need to set 'i486', for conditionals in c/*.[ch].
  ifneq ($(shell gcc -dumpmachine | grep "i.*86-linux"),)
 -- 
-2.17.1
+2.25.1
 
